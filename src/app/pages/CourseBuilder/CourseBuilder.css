@@ -15,3 +15,8 @@
   font-weight: var(--font-weight-semibold);
   text-transform: uppercase;
 }
+
+.save-status {
+  font-size: var(--font-size-sm);
+  line-height: var(--leading-sm);
+}

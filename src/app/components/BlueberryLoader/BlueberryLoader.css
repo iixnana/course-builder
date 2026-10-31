@@ -1,0 +1,124 @@
+.blueberry-loader {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  grid-template-rows: 1fr auto 1fr;
+  justify-items: center;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-cream);
+}
+
+.blueberry-stage {
+  grid-row: 2;
+  display: grid;
+  place-items: center;
+  width: 12rem;
+  height: 12rem;
+}
+
+.blueberry {
+  position: relative;
+  width: 6em;
+  height: 5.5em;
+  background-color: var(--color-blueberry-300);
+  border-radius: 50%;
+  box-shadow: inset 0.25em -0.25em var(--color-blueberry-500);
+  animation: blueberry-inflate 1.6s ease-in-out infinite alternate;
+
+  &::before {
+    position: absolute;
+    left: 2em;
+    width: 2em;
+    height: 1em;
+    content: '';
+    background-color: var(--color-blueberry-900);
+    border-radius: 50%;
+  }
+}
+
+@keyframes blueberry-inflate {
+  0% {
+    transform: scale(1);
+  }
+
+  60% {
+    transform: scale(1.6, 1.45);
+  }
+
+  100% {
+    transform: scale(1.85);
+  }
+}
+
+.loader-progress {
+  grid-row: 3;
+  display: grid;
+  gap: var(--space-2);
+  align-content: start;
+  justify-items: center;
+}
+
+.loader-track {
+  width: 12rem;
+  height: var(--space-6);
+  overflow: hidden;
+  background-color: var(--color-chocolate-900);
+  border: var(--border-width-lg) solid var(--color-cream);
+  border-radius: var(--radius-full);
+}
+
+.loader-fill {
+  width: 40%;
+  height: 100%;
+  background-color: var(--color-blueberry-300);
+  border-radius: inherit;
+  animation: loader-slide 1.4s ease-in-out infinite;
+}
+
+.loader-label {
+  position: relative;
+}
+
+.loader-dots {
+  position: absolute;
+  left: 100%;
+  width: 3ch;
+  text-align: start;
+  animation: loader-dots 1.6s steps(4, jump-none) infinite;
+}
+
+@keyframes loader-slide {
+  from {
+    transform: translateX(-100%);
+  }
+
+  to {
+    transform: translateX(250%);
+  }
+}
+
+@keyframes loader-dots {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+
+  to {
+    clip-path: inset(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .blueberry {
+    transform: scale(1.4);
+    animation: none;
+  }
+
+  .loader-fill {
+    width: 100%;
+    animation: none;
+  }
+
+  .loader-dots {
+    animation: none;
+  }
+}
