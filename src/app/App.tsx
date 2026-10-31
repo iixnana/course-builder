@@ -2,15 +2,16 @@ import { Suspense } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 import { Outlet } from 'react-router-dom'
 import { PageLayout } from './layout/PageLayout'
+import { ErrorPage } from './pages/Errors/Error.page'
 
 export default function App() {
   return (
-    <ErrorBoundary fallback={<div>Something went wrong</div>}>
-      <Suspense fallback={<div>Loading...</div>}>
-        <PageLayout>
+    <PageLayout>
+      <ErrorBoundary fallback={<ErrorPage />}>
+        <Suspense fallback={<div>Loading...</div>}>
           <Outlet />
-        </PageLayout>
-      </Suspense>
-    </ErrorBoundary>
+        </Suspense>
+      </ErrorBoundary>
+    </PageLayout>
   )
 }
