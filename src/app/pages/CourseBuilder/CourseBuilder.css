@@ -1,0 +1,22 @@
+.course-builder {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.step-list {
+  display: grid;
+  gap: var(--space-4);
+  list-style: none;
+}
+
+.step-type {
+  font-size: var(--font-size-sm);
+  line-height: var(--leading-sm);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+}
+
+.save-status {
+  font-size: var(--font-size-sm);
+  line-height: var(--leading-sm);
+}

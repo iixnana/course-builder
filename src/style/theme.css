@@ -1,0 +1,15 @@
+:root {
+  --color-chocolate-900: #3b1f12;
+  --color-chocolate-800: #4d2816;
+  --color-cream: #f5e9d8;
+  --color-blueberry-300: #89a2ca;
+  --color-blueberry-500: #6081b8;
+  --color-blueberry-900: #3e4d64;
+  --radius-md: 0.5rem;
+  --radius-full: 999rem;
+  --border-width-lg: 0.25rem;
+  --shadow-card: 0 0.25rem 0.75rem rgb(0 0 0 / 30%);
+  --focus-ring-width: 0.125rem;
+  --focus-ring-offset: 0.125rem;
+  --press-offset: 0.0625rem;
+}

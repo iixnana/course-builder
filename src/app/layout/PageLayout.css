@@ -1,0 +1,23 @@
+.page-layout {
+  --tile: 6.5rem;
+  --tile-light: var(--color-chocolate-800);
+  --tile-dark: var(--color-chocolate-900);
+  --dots: calc(2 * var(--tile)) calc(2 * var(--tile))
+    radial-gradient(25% 25%, var(--tile-light) 99%, transparent 101%);
+
+  min-height: 100dvh;
+  color: var(--color-cream);
+  background:
+    0 var(--tile) / var(--dots),
+    var(--tile) 0 / var(--dots),
+    radial-gradient(50% 50%, var(--tile-dark) 97%, transparent)
+      calc(var(--tile) / 2) calc(var(--tile) / 2) / var(--tile) var(--tile),
+    linear-gradient(90deg, var(--tile-light) 50%, var(--tile-dark) 0) 0 0 /
+      calc(2 * var(--tile));
+}
+
+.page-content {
+  width: min(100% - 2 * var(--page-gutter), var(--content-width));
+  margin-inline: auto;
+  padding-block: var(--space-8);
+}
