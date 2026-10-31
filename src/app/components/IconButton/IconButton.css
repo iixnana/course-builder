@@ -1,0 +1,53 @@
+.icon-button {
+  position: relative;
+  display: inline-grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: var(--touch-target);
+  height: var(--touch-target);
+  padding: 0;
+  color: inherit;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-full);
+  outline: none;
+  transition: background-color 150ms ease;
+
+  & svg {
+    width: var(--icon-size);
+    height: var(--icon-size);
+  }
+
+  &[data-hovered],
+  &[data-pressed] {
+    background: color-mix(in sRGB, currentColor 12%, transparent);
+  }
+
+  &[data-focus-visible] {
+    outline: var(--focus-ring-width) solid currentColor;
+    outline-offset: var(--focus-ring-offset);
+  }
+
+  &[data-selected] {
+    color: var(--color-cream);
+    background: var(--color-chocolate-900);
+  }
+
+  &[data-disabled] {
+    cursor: not-allowed;
+    opacity: 0.4;
+  }
+}
+
+.tooltip {
+  max-width: 16rem;
+  padding: var(--space-1) var(--space-2);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--leading-sm);
+  color: var(--color-cream);
+  background: var(--color-chocolate-950);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+}

@@ -1,44 +1,79 @@
-import { Button } from '../../components/Button/Button'
-import { Card } from '../../components/Card/Card'
 import { GoldenTicket } from '../../components/GoldenTicket/GoldenTicket'
 import { InlineTextField } from '../../components/InlineTextField/InlineTextField'
-import { stepSummary, stepTypeLabel, type Course } from '../../model/course'
+import { stepIssues, type Course, type StepType } from '../../model/course'
+import { AddStepPanel } from './parts/AddStepPanel'
+import { StepList, type StepListProps } from './parts/StepList'
+import { StepToolbar } from './parts/StepToolbar'
 import './CourseBuilder.css'
 
-interface CourseBuilderViewProps {
+export interface CourseBuilderViewProps extends Omit<StepListProps, 'steps'> {
   course: Course
+  undoLabel?: string
+  redoLabel?: string
+  isAllCollapsed: boolean
   onRenameCourse: (title: string) => void
-  onAddStep: () => void
+  onAddStep: (type: StepType) => void
+  onUndo: () => void
+  onRedo: () => void
+  onToggleAll: () => void
+  onRestoreStep: (id: string) => void
+  onEmptyTrash: () => void
 }
 
 export const CourseBuilderView = ({
   course,
+  undoLabel,
+  redoLabel,
+  isAllCollapsed,
   onRenameCourse,
   onAddStep,
-}: CourseBuilderViewProps) => (
-  <div className="course-builder">
-    <GoldenTicket className="course-details">
-      <InlineTextField
-        label="Course name"
-        isWrapping
-        placeholder="Untitled course"
-        value={course.title}
-        onChange={onRenameCourse}
+  onUndo,
+  onRedo,
+  onToggleAll,
+  onRestoreStep,
+  onEmptyTrash,
+  ...stepListProps
+}: CourseBuilderViewProps) => {
+  const hasSteps = course.steps.length > 0
+
+  return (
+    <div className="course-builder">
+      <GoldenTicket className="course-details">
+        <InlineTextField
+          label="Course name"
+          isWrapping
+          placeholder="Untitled course"
+          value={course.title}
+          onChange={onRenameCourse}
+        />
+      </GoldenTicket>
+
+      <StepToolbar
+        undoLabel={undoLabel}
+        redoLabel={redoLabel}
+        stepCount={course.steps.length}
+        invalidCount={
+          course.steps.filter((step) => stepIssues(step).length > 0).length
+        }
+        isAllCollapsed={isAllCollapsed}
+        trash={course.trash}
+        onUndo={onUndo}
+        onRedo={onRedo}
+        onToggleAll={onToggleAll}
+        onRestoreStep={onRestoreStep}
+        onEmptyTrash={onEmptyTrash}
       />
-    </GoldenTicket>
 
-    <h2 id="course-steps-title" className="screen-reader-only">
-      Steps
-    </h2>
-    <ol className="step-list" role="list" aria-labelledby="course-steps-title">
-      {course.steps.map((step) => (
-        <Card as="li" key={step.id}>
-          <p className="eyebrow">{stepTypeLabel[step.type]}</p>
-          <h3>{stepSummary(step)}</h3>
-        </Card>
-      ))}
-    </ol>
+      {hasSteps && <StepList steps={course.steps} {...stepListProps} />}
 
-    <Button onPress={onAddStep}>Add step</Button>
-  </div>
-)
+      <AddStepPanel
+        message={
+          hasSteps
+            ? undefined
+            : 'No steps yet. Pick a type to add the first one.'
+        }
+        onAddStep={onAddStep}
+      />
+    </div>
+  )
+}

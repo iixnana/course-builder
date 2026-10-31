@@ -20,4 +20,5 @@ export const demoCourse: Course = {
       correctOptionId: 'alarm',
     },
   ],
+  trash: [],
 }
