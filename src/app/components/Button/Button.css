@@ -1,0 +1,36 @@
+.button {
+  min-height: var(--touch-target);
+  padding-inline: var(--space-4);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-cream);
+  cursor: pointer;
+  background: var(--color-chocolate-900);
+  border: none;
+  border-radius: var(--radius-md);
+  outline: none;
+  transition: background-color 150ms ease;
+
+  &[data-hovered] {
+    background: var(--color-chocolate-800);
+  }
+
+  &[data-focus-visible] {
+    outline: var(--focus-ring-width) solid var(--color-chocolate-900);
+    outline-offset: var(--focus-ring-offset);
+  }
+
+  &[data-pressed] {
+    transform: translateY(var(--press-offset));
+  }
+
+  &[data-disabled] {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+}
+
+@media (width < 48rem) {
+  .button {
+    width: 100%;
+  }
+}

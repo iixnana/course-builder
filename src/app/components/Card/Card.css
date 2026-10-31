@@ -1,0 +1,15 @@
+.card {
+  --card-padding: var(--space-4);
+
+  padding: var(--card-padding);
+  color: var(--color-chocolate-900);
+  background: var(--color-cream);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+}
+
+@media (width >= 48rem) {
+  .card {
+    --card-padding: var(--space-6);
+  }
+}

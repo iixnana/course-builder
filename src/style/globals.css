@@ -29,10 +29,12 @@
   --space-8: 2rem;
   --space-12: 3rem;
   --space-16: 4rem;
+  --touch-target: 2.75rem;
 
   /* max line length for running text, and page layout */
   --measure: 65ch;
   --page-width: 80rem;
+  --content-width: 48rem;
   --page-gutter: var(--space-4);
 
   font-synthesis: none;

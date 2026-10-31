@@ -8,7 +8,7 @@ export default function App() {
   return (
     <PageLayout>
       <ErrorBoundary fallback={<ErrorPage />}>
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<p role="status">Loading…</p>}>
           <Outlet />
         </Suspense>
       </ErrorBoundary>

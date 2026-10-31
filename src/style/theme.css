@@ -1,0 +1,10 @@
+:root {
+  --color-chocolate-900: #3b1f12;
+  --color-chocolate-800: #4d2816;
+  --color-cream: #f5e9d8;
+  --radius-md: 0.5rem;
+  --shadow-card: 0 0.25rem 0.75rem rgb(0 0 0 / 30%);
+  --focus-ring-width: 0.125rem;
+  --focus-ring-offset: 0.125rem;
+  --press-offset: 0.0625rem;
+}
