@@ -1,0 +1,46 @@
+.golden-ticket {
+  --zigzag: var(--space-6);
+  --ticket-padding-block: var(--space-8);
+  --ticket-mask-solid: #000;
+
+  position: relative;
+  padding: var(--ticket-padding-block) calc(var(--zigzag) / 2 + var(--space-6));
+  color: var(--color-ticket-ink);
+  text-align: center;
+  text-transform: uppercase;
+  background: var(--color-ticket-gold);
+  mask:
+    linear-gradient(var(--ticket-mask-solid) 0 0) center /
+      calc(100% - var(--zigzag)) 100% no-repeat,
+    conic-gradient(
+        from 45deg at 0 50%,
+        var(--ticket-mask-solid) 90deg,
+        transparent 0
+      )
+      0 calc(var(--zigzag) / 2) / calc(var(--zigzag) / 2) var(--zigzag)
+      no-repeat round,
+    conic-gradient(
+        from 225deg at 100% 50%,
+        var(--ticket-mask-solid) 90deg,
+        transparent 0
+      )
+      100% calc(var(--zigzag) / 2) / calc(var(--zigzag) / 2) var(--zigzag)
+      no-repeat round;
+
+  &::before {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    content: '';
+    background: var(--gradient-ticket-sheen);
+    opacity: 0.4;
+  }
+}
+
+@media (width >= 48rem) {
+  .golden-ticket {
+    --zigzag: var(--space-8);
+    --ticket-padding-block: var(--space-12);
+  }
+}

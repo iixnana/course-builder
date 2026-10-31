@@ -1,4 +1,7 @@
 .button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   min-height: var(--touch-target);
   padding-inline: var(--space-4);
   font-weight: var(--font-weight-semibold);
@@ -7,6 +10,7 @@
   background: var(--color-chocolate-900);
   border: none;
   border-radius: var(--radius-md);
+  text-decoration: none;
   outline: none;
   transition: background-color 150ms ease;
 

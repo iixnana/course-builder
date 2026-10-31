@@ -1,0 +1,46 @@
+.blueberry {
+  position: relative;
+  flex-shrink: 0;
+  width: 6em;
+  height: 5.5em;
+  background-color: var(--color-blueberry-300);
+  border-radius: 50%;
+  box-shadow: inset 0.25em -0.25em var(--color-blueberry-500);
+
+  &::before {
+    position: absolute;
+    left: 2em;
+    width: 2em;
+    height: 1em;
+    content: '';
+    background-color: var(--color-blueberry-900);
+    border-radius: 50%;
+  }
+}
+
+.blueberry-eye {
+  position: absolute;
+  top: 2.25em;
+  width: 0.5em;
+  height: 0.75em;
+  background-color: var(--color-blueberry-900);
+  border-radius: 50%;
+}
+
+.blueberry-eye-left {
+  left: 1.75em;
+}
+
+.blueberry-eye-right {
+  right: 1.75em;
+}
+
+.blueberry-frown {
+  position: absolute;
+  top: 3.5em;
+  left: 2.25em;
+  width: 1.5em;
+  height: 0.75em;
+  border-top: 0.25em solid var(--color-blueberry-900);
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+}

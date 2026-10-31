@@ -11,11 +11,16 @@ export const router = createBrowserRouter([
     element: <App />,
     errorElement: <ErrorPage />,
     children: [
-      { index: true, element: <CourseBuilderPage /> },
-      { path: NavigationRoute.NotFound, element: <NotFoundPage /> },
       {
-        path: '*',
-        element: <Navigate to={NavigationRoute.NotFound} replace />,
+        errorElement: <ErrorPage />,
+        children: [
+          { index: true, element: <CourseBuilderPage /> },
+          { path: NavigationRoute.NotFound, element: <NotFoundPage /> },
+          {
+            path: '*',
+            element: <Navigate to={NavigationRoute.NotFound} replace />,
+          },
+        ],
       },
     ],
   },

@@ -17,7 +17,5 @@
 }
 
 .page-content {
-  width: min(100% - 2 * var(--page-gutter), var(--content-width));
-  margin-inline: auto;
   padding-block: var(--space-8);
 }

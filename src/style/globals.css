@@ -1,8 +1,8 @@
 :root {
   --font-body: Inter, system-ui, 'Segoe UI', Roboto, sans-serif;
   --font-heading: 'Wonderbar', system-ui, 'Segoe UI', Roboto, sans-serif;
+  --font-brand: 'Chocolate Factory', system-ui, 'Segoe UI', Roboto, sans-serif;
   --font-weight-regular: 400;
-  --font-weight-medium: 500;
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
 
@@ -17,13 +17,10 @@
   --leading-xl: 2rem;
   --font-size-2xl: 2rem;
   --leading-2xl: 2.5rem;
-  --font-size-3xl: 3rem;
-  --leading-3xl: 3.5rem;
 
   /* --space-N = N × 4px */
   --space-1: 0.25rem;
   --space-2: 0.5rem;
-  --space-3: 0.75rem;
   --space-4: 1rem;
   --space-6: 1.5rem;
   --space-8: 2rem;
@@ -55,6 +52,14 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
+
+html {
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 body {
@@ -103,13 +108,40 @@ h6 {
   text-wrap: balance;
 }
 
+h1 {
+  font-size: var(--font-size-2xl);
+  line-height: var(--leading-2xl);
+}
+
 h2 {
   font-family: var(--font-heading);
+  font-size: var(--font-size-xl);
   font-weight: var(--font-weight-regular);
+  line-height: var(--leading-xl);
+}
+
+h3 {
+  font-size: var(--font-size-lg);
+  line-height: var(--leading-lg);
 }
 
 #root {
   isolation: isolate;
+}
+
+.eyebrow {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--leading-sm);
+  text-transform: uppercase;
+}
+
+.content-column {
+  width: min(
+    100% - 2 * var(--page-gutter),
+    var(--column-width, var(--content-width))
+  );
+  margin-inline: auto;
 }
 
 .screen-reader-only {

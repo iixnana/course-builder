@@ -3,20 +3,35 @@
   gap: var(--space-4);
 }
 
+.course-details {
+  display: grid;
+  gap: var(--space-2);
+
+  & .inline-text-field {
+    padding-block: var(--space-4);
+    border-block: var(--border-width-lg) solid currentColor;
+  }
+
+  & .inline-text-field-label {
+    letter-spacing: 0.2em;
+
+    &::before {
+      content: '★ ' / '';
+    }
+
+    &::after {
+      content: ' ★' / '';
+    }
+  }
+
+  & .inline-text-field-input {
+    text-align: center;
+    text-transform: uppercase;
+  }
+}
+
 .step-list {
   display: grid;
   gap: var(--space-4);
   list-style: none;
-}
-
-.step-type {
-  font-size: var(--font-size-sm);
-  line-height: var(--leading-sm);
-  font-weight: var(--font-weight-semibold);
-  text-transform: uppercase;
-}
-
-.save-status {
-  font-size: var(--font-size-sm);
-  line-height: var(--leading-sm);
 }

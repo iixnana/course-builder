@@ -1,4 +1,5 @@
 import { Label, ProgressBar } from 'react-aria-components'
+import { Blueberry } from '../Blueberry/Blueberry'
 import './BlueberryLoader.css'
 
 interface BlueberryLoaderProps {
@@ -10,7 +11,7 @@ export const BlueberryLoader = ({
 }: BlueberryLoaderProps) => (
   <div className="blueberry-loader">
     <div className="blueberry-stage" aria-hidden="true">
-      <div className="blueberry" />
+      <Blueberry className="blueberry-inflating" />
     </div>
     <ProgressBar className="loader-progress" isIndeterminate>
       <div className="loader-track">
