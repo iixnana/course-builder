@@ -1,0 +1,36 @@
+.inline-text-field {
+  display: grid;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.inline-text-field-input {
+  width: 100%;
+  min-width: 0;
+  padding: var(--space-1) 0;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--leading-xl);
+  color: inherit;
+  background: transparent;
+  border: none;
+  border-bottom: var(--border-width-sm) dashed transparent;
+  outline: none;
+  transition: border-color 150ms ease;
+  resize: none;
+  field-sizing: content;
+
+  &::placeholder {
+    color: var(--color-chocolate-800);
+    opacity: 0.75;
+  }
+
+  &[data-hovered] {
+    border-bottom-color: var(--color-chocolate-800);
+  }
+
+  &[data-focused] {
+    border-bottom-style: solid;
+    border-bottom-color: var(--color-chocolate-900);
+  }
+}

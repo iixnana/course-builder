@@ -1,30 +1,23 @@
 import type { Course } from '../model/course'
 
 export const demoCourse: Course = {
-  id: 'demo-course',
-  title: 'Course Builder',
-  description: 'Build a training course one step at a time.',
+  id: 'chocolate-river-safety',
+  title: 'Chocolate River Safety',
   steps: [
     {
-      id: 'welcome',
+      id: 'river-intro',
       type: 'text',
-      body: 'Welcome to the Inventing Room',
+      body: 'Never drink straight from the chocolate river.',
     },
     {
-      id: 'river',
-      type: 'image',
-      url: '',
-      alt: 'The chocolate river',
-    },
-    {
-      id: 'safety',
+      id: 'river-question',
       type: 'multipleChoice',
-      question: 'Who may taste the river?',
+      question: 'What do you do if someone falls in?',
       options: [
-        { id: 'everyone', text: 'Everyone' },
-        { id: 'nobody', text: 'Nobody' },
+        { id: 'alarm', text: 'Pull the pipe alarm' },
+        { id: 'jump', text: 'Jump in after them' },
       ],
-      correctOptionId: 'nobody',
+      correctOptionId: 'alarm',
     },
   ],
 }

@@ -1,14 +1,42 @@
 :root {
+  --color-chocolate-950: #2a150b;
   --color-chocolate-900: #3b1f12;
   --color-chocolate-800: #4d2816;
   --color-cream: #f5e9d8;
+  --color-gold: #f2c369;
+  --color-ticket-gold: #dbad4b;
+  --color-ticket-ink: #2e2205;
+  --color-ticket-shine: rgb(248 255 151 / 70%);
+  --color-ticket-shade: rgb(0 0 0 / 40%);
   --color-blueberry-300: #89a2ca;
   --color-blueberry-500: #6081b8;
   --color-blueberry-900: #3e4d64;
+  --color-surface: #fbf3e4;
+  --color-orange-500: #e8782a;
+  --color-orange-400: #f39a55;
+  --pattern-wonka-stripes: repeating-linear-gradient(
+    -45deg,
+    var(--color-orange-400) 0 12.5%,
+    var(--color-orange-500) 0 25%
+  );
+  --gradient-ticket-sheen: linear-gradient(
+    -250deg,
+    transparent 15%,
+    var(--color-ticket-shine) 30%,
+    transparent 40%,
+    color-mix(in sRGB, var(--color-ticket-shade) 75%, transparent) 50%,
+    var(--color-ticket-shade) 60%,
+    color-mix(in sRGB, var(--color-ticket-shade) 75%, transparent) 70%,
+    transparent 80%
+  );
   --radius-md: 0.5rem;
+  --radius-xl: 2rem;
   --radius-full: 999rem;
+  --border-width-sm: 0.125rem;
   --border-width-lg: 0.25rem;
-  --shadow-card: 0 0.25rem 0.75rem rgb(0 0 0 / 30%);
+  --border-width-xl: 0.5rem;
+  --shadow-card: 0 0.5rem 1rem
+    color-mix(in sRGB, var(--color-chocolate-900) 20%, transparent);
   --focus-ring-width: 0.125rem;
   --focus-ring-offset: 0.125rem;
   --press-offset: 0.0625rem;

@@ -1,8 +1,6 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import type { Course } from '../model/course'
 import type { CourseRepository } from './CourseRepository'
-
-export type SaveStatus = 'idle' | 'saving' | 'saved' | 'error'
 
 type LoadState =
   | { status: 'loading' }
@@ -11,14 +9,16 @@ type LoadState =
 
 export const useCourse = (repository: CourseRepository) => {
   const [loadState, setLoadState] = useState<LoadState>({ status: 'loading' })
-  const [saveStatus, setSaveStatus] = useState<SaveStatus>('idle')
+  const latestCourse = useRef<Course | null>(null)
 
   useEffect(() => {
     let ignore = false
     repository
       .load()
       .then((course) => {
-        if (!ignore) setLoadState({ status: 'ready', course })
+        if (ignore) return
+        latestCourse.current = course
+        setLoadState({ status: 'ready', course })
       })
       .catch((error: unknown) => {
         if (!ignore) setLoadState({ status: 'error', error })
@@ -30,17 +30,16 @@ export const useCourse = (repository: CourseRepository) => {
 
   const updateCourse = useCallback(
     (update: (course: Course) => Course) => {
-      if (loadState.status !== 'ready') return
-      const course = update(loadState.course)
+      if (!latestCourse.current) return
+      const course = update(latestCourse.current)
+      latestCourse.current = course
       setLoadState({ status: 'ready', course })
-      setSaveStatus('saving')
-      repository
-        .save(course)
-        .then(() => setSaveStatus('saved'))
-        .catch(() => setSaveStatus('error'))
+      repository.save(course).catch((error: unknown) => {
+        console.error("Couldn't save the course", error)
+      })
     },
-    [loadState, repository],
+    [repository],
   )
 
-  return { loadState, saveStatus, updateCourse }
+  return { loadState, updateCourse }
 }

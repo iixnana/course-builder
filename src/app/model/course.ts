@@ -31,7 +31,6 @@ export type StepType = Step['type']
 export interface Course {
   id: string
   title: string
-  description: string
   steps: Step[]
 }
 
@@ -63,6 +62,11 @@ export const stepSummary = (step: Step): string => {
       return step.question || 'Untitled question'
   }
 }
+
+export const renameCourse = (course: Course, title: string): Course => ({
+  ...course,
+  title,
+})
 
 export const addStep = (course: Course, type: StepType): Course => ({
   ...course,

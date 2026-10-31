@@ -1,0 +1,55 @@
+.site-header {
+  --header-color: var(--color-chocolate-950);
+  --wave-length: var(--space-16);
+  --wave-height: var(--space-4);
+  --logo-height: var(--space-12);
+
+  color: var(--color-cream);
+}
+
+.site-header-bar {
+  padding-block: var(--space-6) var(--space-2);
+  background-color: var(--header-color);
+}
+
+.site-header-inner {
+  --column-width: var(--page-width);
+
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  align-items: center;
+  justify-content: center;
+}
+
+.site-header-logo {
+  width: auto;
+  height: var(--logo-height);
+}
+
+.site-header-title {
+  color: var(--color-gold);
+  font-family: var(--font-brand);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--leading-xl);
+}
+
+.site-header-wave {
+  height: var(--wave-height);
+  background-color: var(--header-color);
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 40' preserveAspectRatio='none'%3E%3Cpath d='M0 0H80V20Q60 40 40 20T0 20Z'/%3E%3C/svg%3E")
+    repeat-x 0 0 / var(--wave-length) 100%;
+}
+
+@media (width >= 48rem) {
+  .site-header {
+    --wave-height: var(--space-6);
+    --logo-height: var(--space-16);
+  }
+
+  .site-header-title {
+    font-size: var(--font-size-2xl);
+    line-height: var(--leading-2xl);
+  }
+}

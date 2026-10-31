@@ -1,18 +1,19 @@
 import { Suspense } from 'react'
-import { ErrorBoundary } from 'react-error-boundary'
-import { Outlet } from 'react-router-dom'
+import { RouterProvider } from 'react-aria-components'
+import { Outlet, useHref, useNavigate } from 'react-router-dom'
 import { BlueberryLoader } from './components/BlueberryLoader/BlueberryLoader'
 import { PageLayout } from './layout/PageLayout'
-import { ErrorPage } from './pages/Errors/Error.page'
 
 export default function App() {
+  const navigate = useNavigate()
+
   return (
-    <PageLayout>
-      <ErrorBoundary fallback={<ErrorPage />}>
+    <RouterProvider navigate={(path) => void navigate(path)} useHref={useHref}>
+      <PageLayout>
         <Suspense fallback={<BlueberryLoader />}>
           <Outlet />
         </Suspense>
-      </ErrorBoundary>
-    </PageLayout>
+      </PageLayout>
+    </RouterProvider>
   )
 }
