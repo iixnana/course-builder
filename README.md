@@ -1,32 +1,39 @@
-# React + TypeScript + Vite
+# Willy Wonka and the Chocolate Factory Training Platform
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+This is a solution for a Frontend case.
 
-Currently, two official plugins are available:
+The project uses React + TypeScript + Vite.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Prerequisites
 
-## React Compiler
+- [Node.js](https://nodejs.org/) 20.19+ or 22.12+ (required by Vite 8)
+- [pnpm](https://pnpm.io/) 9 or later (`npm install -g pnpm`, or `corepack enable`)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Running the project
 
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```sh
+pnpm install
+pnpm start
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+Then open http://localhost:3000.
+
+Other scripts:
+
+| Command         | What it does                                    |
+| --------------- | ----------------------------------------------- |
+| `pnpm build`    | Type-checks and builds for production to `dist` |
+| `pnpm preview`  | Serves the production build locally             |
+| `pnpm lint`     | Lints TypeScript with oxlint                    |
+| `pnpm lint:css` | Lints CSS with Stylelint                        |
+| `pnpm format`   | Formats the code with Prettier                  |
+
+## AI assistance
+
+I use Claude Code as a pair programmer. I make the design and architecture decisions, and Claude Code implements them while I review and iterate in small steps.
+
+- **Building from references:** I describe what I want to achieve, sometimes providing examples from CodePen. Claude adapts them for me and I review the results and test manually in a browser.
+- **Iterating on design:** I review the overall design in the browser on various screen sizes and give feedback to Claude to iterate on until I am happy with the result.
+- **Standing rules:** Claude Code's memory holds my conventions: good practices, preference on local vs shared variables and functions, responsive design, typography, WCAG AA contrast checks, tests and no unnecessary code comments.
+- **Verification:** every change is checked with lint, Stylelint, Vitest and Testing Library tests, and a production build. Visual changes are also checked with headless Chrome screenshots at desktop and phone widths.
+- **Git:** I manage git commits myself.
