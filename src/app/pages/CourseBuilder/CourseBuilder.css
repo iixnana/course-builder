@@ -1,6 +1,6 @@
 .course-builder {
   display: grid;
-  gap: var(--space-4);
+  gap: var(--space-6);
 }
 
 .course-details {
@@ -28,10 +28,4 @@
     text-align: center;
     text-transform: uppercase;
   }
-}
-
-.step-list {
-  display: grid;
-  gap: var(--space-4);
-  list-style: none;
 }

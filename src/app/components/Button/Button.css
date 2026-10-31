@@ -31,6 +31,28 @@
     cursor: not-allowed;
     opacity: 0.5;
   }
+
+  &[data-variant='secondary'] {
+    color: var(--color-chocolate-900);
+    background: transparent;
+    box-shadow: inset 0 0 0 var(--border-width-sm) var(--color-chocolate-900);
+
+    &[data-hovered] {
+      background: color-mix(
+        in sRGB,
+        var(--color-chocolate-900) 10%,
+        transparent
+      );
+    }
+  }
+
+  &[data-variant='danger'] {
+    background: var(--color-cherry);
+
+    &[data-hovered] {
+      background: var(--color-cherry-800);
+    }
+  }
 }
 
 @media (width < 48rem) {

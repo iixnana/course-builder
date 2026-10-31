@@ -1,0 +1,31 @@
+.trash-list {
+  display: grid;
+  gap: var(--space-2);
+  list-style: none;
+}
+
+.trash-item {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-cream);
+  border-radius: var(--radius-md);
+
+  & .button {
+    gap: var(--space-2);
+    width: auto;
+  }
+}
+
+.trash-item-icon {
+  flex-shrink: 0;
+  width: var(--icon-size);
+  height: var(--icon-size);
+}
+
+.trash-item-title {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}

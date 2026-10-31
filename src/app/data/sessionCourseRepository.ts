@@ -2,7 +2,7 @@ import type { Course } from '../model/course'
 import type { CourseRepository } from './CourseRepository'
 import { demoCourse } from './demoCourse'
 
-const storageKey = 'course-builder:course:v3'
+const storageKey = 'course-builder:course:v4'
 const firstLoadDelayMs = import.meta.env.DEV ? 5000 : 0
 
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
