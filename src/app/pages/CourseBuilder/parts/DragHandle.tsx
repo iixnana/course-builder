@@ -11,7 +11,7 @@ interface DragHandleProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   isDecorative?: boolean
 }
 
-const label = 'Drag to reorder'
+const label = 'Drag to Reorder'
 
 export const DragHandle = ({
   ref,

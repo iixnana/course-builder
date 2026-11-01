@@ -12,9 +12,11 @@ export const motion = () => ({
 const hiddenScale = '0.85'
 
 const enterKeyframes = (element: HTMLElement, easing: string): Keyframe[] => {
-  const gap = element.parentElement
-    ? getComputedStyle(element.parentElement).rowGap
-    : '0px'
+  const parent = element.parentElement
+  const gap =
+    parent && parent.children.length > 1
+      ? getComputedStyle(parent).rowGap
+      : '0px'
   const collapsed = `calc(-1 * (${element.offsetHeight}px + ${gap}))`
 
   return [

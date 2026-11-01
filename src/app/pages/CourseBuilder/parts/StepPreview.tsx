@@ -1,5 +1,13 @@
-import { Circle, CircleCheck, ImageIcon } from 'lucide-react'
-import type { Step } from '../../../model/course'
+import {
+  Circle,
+  CircleCheck,
+  ImageIcon,
+  Square,
+  SquareCheck,
+} from 'lucide-react'
+import { RichText } from '../../../components/RichTextEditor/RichText'
+import { isCorrectOption, type Step } from '../../../../model/course'
+import { richTextToPlainText } from '../../../../utils/richText'
 import './StepPreview.css'
 
 interface StepPreviewProps {
@@ -9,10 +17,10 @@ interface StepPreviewProps {
 export const StepPreview = ({ step }: StepPreviewProps) => {
   switch (step.type) {
     case 'text':
-      return step.body.trim() ? (
-        <p className="step-text">{step.body}</p>
+      return richTextToPlainText(step.body) ? (
+        <RichText html={step.body} />
       ) : (
-        <p className="step-empty">No text yet.</p>
+        <p className="step-empty">Edit this step to add your text.</p>
       )
     case 'image':
       return step.url ? (
@@ -27,14 +35,25 @@ export const StepPreview = ({ step }: StepPreviewProps) => {
       ) : (
         <div className="step-image-placeholder">
           <ImageIcon aria-hidden="true" />
-          <p>No image yet.</p>
+          <p>Edit this step to add an image.</p>
         </div>
       )
-    case 'multipleChoice':
+    case 'multipleChoice': {
+      const hasSeveral = step.correctOptionIds.length > 1
+      const [Unmarked, Marked] = hasSeveral
+        ? [Square, SquareCheck]
+        : [Circle, CircleCheck]
       return (
-        <ul className="step-options" aria-label="Answers">
+        <ul
+          className="step-options"
+          aria-label={
+            hasSeveral
+              ? `Answers, ${step.correctOptionIds.length} correct`
+              : 'Answers'
+          }
+        >
           {step.options.map((option) => {
-            const isCorrect = option.id === step.correctOptionId
+            const isCorrect = isCorrectOption(step, option.id)
             return (
               <li
                 key={option.id}
@@ -42,11 +61,15 @@ export const StepPreview = ({ step }: StepPreviewProps) => {
                 data-correct={isCorrect || undefined}
               >
                 {isCorrect ? (
-                  <CircleCheck aria-hidden="true" />
+                  <Marked aria-hidden="true" />
                 ) : (
-                  <Circle aria-hidden="true" />
+                  <Unmarked aria-hidden="true" />
                 )}
-                <span>{option.text || 'Empty answer'}</span>
+                {option.text ? (
+                  <span>{option.text}</span>
+                ) : (
+                  <span className="step-empty">Write this answer</span>
+                )}
                 {isCorrect && (
                   <span className="screen-reader-only">(correct answer)</span>
                 )}
@@ -55,5 +78,6 @@ export const StepPreview = ({ step }: StepPreviewProps) => {
           })}
         </ul>
       )
+    }
   }
 }

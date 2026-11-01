@@ -22,13 +22,27 @@ export const useContentSwap = (
       return
     }
     const { duration, easing } = motion()
-    element.animate(
-      [
-        { height: `${from}px`, overflow: 'hidden' },
-        { height: `${to}px`, overflow: 'hidden' },
-      ],
-      { duration, easing },
-    )
+    const heights = (end: number) => [
+      { height: `${from}px`, overflow: 'hidden' },
+      { height: `${end}px`, overflow: 'hidden' },
+    ]
+    const animation = element.animate(heights(to), { duration, easing })
+
+    const content = element.firstElementChild
+    if (content instanceof HTMLElement) {
+      const startHeight = content.offsetHeight
+      const retarget = new ResizeObserver(() => {
+        if (animation.effect instanceof KeyframeEffect) {
+          animation.effect.setKeyframes(
+            heights(to + content.offsetHeight - startHeight),
+          )
+        }
+      })
+      retarget.observe(content)
+      const stop = () => retarget.disconnect()
+      animation.addEventListener('finish', stop)
+      animation.addEventListener('cancel', stop)
+    }
     for (const child of element.firstElementChild?.children ?? []) {
       child.animate(
         [

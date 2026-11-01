@@ -2,15 +2,13 @@
   --color-chocolate-950: #2a150b;
   --color-chocolate-900: #3b1f12;
   --color-chocolate-800: #4d2816;
-  --color-text: #4a2a1a;
+  --color-text: #6b4530;
   --color-cream-100: #f1e4d1;
   --color-cream-200: #ecdcc6;
   --color-cream-300: #dcc6a4;
   --color-cream: #f5e9d8;
   --color-cherry: #9e1b32;
   --color-cherry-800: #7a1426;
-  --color-warning-400: #ef6f7c;
-  --color-warning-500: #d9465a;
   --color-gold: #f2c369;
   --color-green-100: #d9ecd2;
   --color-green-700: #357032;
@@ -28,15 +26,20 @@
   --color-accent: var(--color-caramel-400);
   --color-accent-strong: var(--color-caramel-600);
   --color-surface: #f3e6d4;
+  --pattern-scroll-candy: repeating-linear-gradient(
+    -45deg,
+    var(--color-accent) 0 0.25rem,
+    var(--color-accent-soft) 0.25rem 0.5rem
+  );
+  --scroll-track: color-mix(
+    in sRGB,
+    var(--color-chocolate-900) 12%,
+    transparent
+  );
   --pattern-candy-stripes: repeating-linear-gradient(
     -45deg,
     var(--color-accent) 0 25%,
     var(--color-accent-soft) 0 50%
-  );
-  --pattern-warning-stripes: repeating-linear-gradient(
-    -45deg,
-    var(--color-warning-500) 0 25%,
-    var(--color-warning-400) 0 50%
   );
   --gradient-ticket-sheen: linear-gradient(
     -250deg,
@@ -75,9 +78,9 @@
     0 0 0 var(--focus-ring-width) var(--focus-ring-color),
     0 0 var(--focus-ring-blur) var(--focus-ring-width)
       color-mix(in sRGB, var(--focus-ring-color) 60%, transparent);
-  --press-offset: 0.0625rem;
   --motion-duration: 650ms;
   --motion-easing: cubic-bezier(0.4, 0, 0.2, 1);
+  --burst-pause: 250ms;
   --focus-transition: box-shadow 200ms cubic-bezier(0.2, 0, 0, 1);
 }
 

@@ -1,5 +1,6 @@
+import { RichTextEditor } from '../../../components/RichTextEditor/RichTextEditor'
 import { TextField } from '../../../components/TextField/TextField'
-import type { TextStep } from '../../../model/course'
+import { placeholderText, type TextStep } from '../../../../model/course'
 
 interface TextStepEditorProps {
   step: TextStep
@@ -7,11 +8,18 @@ interface TextStepEditorProps {
 }
 
 export const TextStepEditor = ({ step, onChange }: TextStepEditorProps) => (
-  <TextField
-    label="Text"
-    isMultiline
-    placeholder="What should the trainee read?"
-    value={step.body}
-    onChange={(body) => onChange({ ...step, body })}
-  />
+  <>
+    <TextField
+      label="Title (optional)"
+      placeholder={placeholderText.title}
+      value={step.title}
+      onChange={(title) => onChange({ ...step, title })}
+    />
+    <RichTextEditor
+      label="Text"
+      placeholder={placeholderText.body}
+      value={step.body}
+      onChange={(body) => onChange({ ...step, body })}
+    />
+  </>
 )

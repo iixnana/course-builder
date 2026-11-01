@@ -1,7 +1,7 @@
-import { useEffect, useRef, type KeyboardEvent } from 'react'
-import type { Step } from '../../../model/course'
-import { prefersReducedMotion } from '../../../hooks/usePrefersReducedMotion'
-import { isTextEntry } from '../../../utils/isTextEntry'
+import { useEffect, useRef } from 'react'
+import type { Step } from '../../../../model/course'
+import { prefersReducedMotion } from '../../../../hooks/usePrefersReducedMotion'
+import { isTextEntry } from '../../../../utils/isTextEntry'
 import { ImageStepEditor } from './ImageStepEditor'
 import { QuestionStepEditor } from './QuestionStepEditor'
 import { TextStepEditor } from './TextStepEditor'
@@ -10,12 +10,11 @@ import './StepEditor.css'
 interface StepEditorProps {
   step: Step
   onChange: (step: Step) => void
-  onDone: () => void
 }
 
 const firstFieldSelector = 'input:not([type="file"]), textarea'
 
-export const StepEditor = ({ step, onChange, onDone }: StepEditorProps) => {
+export const StepEditor = ({ step, onChange }: StepEditorProps) => {
   const editor = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -44,12 +43,8 @@ export const StepEditor = ({ step, onChange, onDone }: StepEditorProps) => {
     }
   }, [])
 
-  const finishOnEscape = (event: KeyboardEvent) => {
-    if (event.key === 'Escape') onDone()
-  }
-
   return (
-    <div ref={editor} className="step-editor" onKeyDown={finishOnEscape}>
+    <div ref={editor} className="step-editor">
       {step.type === 'text' && (
         <TextStepEditor step={step} onChange={onChange} />
       )}

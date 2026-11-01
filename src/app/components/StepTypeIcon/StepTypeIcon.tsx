@@ -4,7 +4,7 @@ import {
   TextAlignStart,
   type LucideIcon,
 } from 'lucide-react'
-import type { StepType } from '../../model/course'
+import type { StepType } from '../../../model/course'
 
 const icons: Record<StepType, LucideIcon> = {
   text: TextAlignStart,

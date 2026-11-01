@@ -3,16 +3,18 @@
   flex-direction: column;
   gap: var(--space-4);
   list-style: none;
+  transition: margin-block-end calc(var(--motion-duration) * 1.5)
+    var(--motion-easing);
+
+  &[data-empty] {
+    margin-block-end: calc(-1 * var(--space-4));
+  }
 }
 
 .step-card {
   --card-padding: var(--space-4);
 
   position: relative;
-
-  &[data-invalid] {
-    --card-border-pattern: var(--pattern-warning-stripes);
-  }
 
   &[data-placeholder] {
     background: color-mix(in sRGB, var(--color-chocolate-900) 8%, transparent);
@@ -79,6 +81,10 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .step-list {
+    transition: none;
+  }
+
   .drag-lift {
     animation: none;
   }
