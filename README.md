@@ -56,6 +56,7 @@ The course lives in the browser's session storage. A refresh keeps the work and 
 - Validation that blocks saving. An empty step is allowed, because the tool should be forgiving. A step that was never touched simply does not go to the trash when deleted.
 - Automated tests. With the time cap I put the hours into the interaction details, and checked each change with type-checks, linting, a production build and headless Chrome scripts at desktop and phone widths.
 - Due to time limitations and being limited to only FE app, having additional settings around how the changes are saved was considered out of scope.
+- No translations as it's not a requirement.
 
 ## Key design decisions
 
