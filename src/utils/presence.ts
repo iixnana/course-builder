@@ -10,6 +10,11 @@ export const motion = () => ({
 })
 
 const hiddenScale = '0.85'
+const presenceLength = 1.5
+const spaceEnd = 0.6
+
+export const presenceSpaceDuration = () =>
+  motion().duration * presenceLength * spaceEnd
 
 const enterKeyframes = (element: HTMLElement, easing: string): Keyframe[] => {
   const parent = element.parentElement
@@ -22,7 +27,7 @@ const enterKeyframes = (element: HTMLElement, easing: string): Keyframe[] => {
   return [
     { offset: 0, marginTop: collapsed, opacity: 0, scale: hiddenScale, easing },
     { offset: 0.4, opacity: 0, scale: hiddenScale, easing },
-    { offset: 0.6, marginTop: '0px', easing },
+    { offset: spaceEnd, marginTop: '0px', easing },
     { offset: 1, marginTop: '0px', opacity: 1, scale: '1' },
   ]
 }
@@ -45,7 +50,7 @@ export const animatePresence = (
   return element.animate(
     direction === 'enter' ? keyframes : mirror(keyframes, easing),
     {
-      duration: duration * 1.5,
+      duration: duration * presenceLength,
       easing: 'linear',
       fill: direction === 'exit' ? 'forwards' : 'none',
     },

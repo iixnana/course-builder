@@ -32,8 +32,8 @@
   grid-row: 2;
   display: grid;
   place-items: center;
-  width: 12rem;
-  height: 12rem;
+  width: var(--loader-size, 12rem);
+  height: var(--loader-size, 12rem);
 }
 
 .blueberry-inflating {
@@ -63,7 +63,7 @@
 }
 
 .loader-track {
-  width: 12rem;
+  width: var(--loader-size, 12rem);
   height: var(--space-4);
   overflow: hidden;
   background-color: var(--color-cream-300);
@@ -107,6 +107,26 @@
 
   to {
     clip-path: inset(0);
+  }
+}
+
+.blueberry-loader[data-inline] {
+  --loader-size: 6rem;
+
+  position: absolute;
+  grid-template-rows: auto auto;
+  gap: var(--space-4);
+  place-content: center;
+  background: inherit;
+  border-radius: inherit;
+
+  & .blueberry-stage,
+  & .loader-progress {
+    grid-row: auto;
+  }
+
+  & .blueberry-stage {
+    font-size: 0.5em;
   }
 }
 

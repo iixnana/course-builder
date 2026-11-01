@@ -3,7 +3,16 @@ const maxDuration = 2000
 
 const userScrollEvents = ['wheel', 'touchstart', 'keydown'] as const
 
-export const keepInView = (element: Element | null | undefined) => {
+let activeRun = 0
+
+interface KeepInViewOptions {
+  onlyDown?: boolean
+}
+
+export const keepInView = (
+  element: Element | null | undefined,
+  { onlyDown = false }: KeepInViewOptions = {},
+) => {
   if (!element) return
   const root = document.documentElement
   const startTop = element.getBoundingClientRect().top
@@ -11,13 +20,15 @@ export const keepInView = (element: Element | null | undefined) => {
   let hasMoved = false
   let stillFrames = 0
   let isReleased = false
+  activeRun += 1
+  const run = activeRun
 
   const release = () => {
     isReleased = true
   }
 
   const finish = () => {
-    root.style.removeProperty('overflow-anchor')
+    if (run === activeRun) root.style.removeProperty('overflow-anchor')
     for (const type of userScrollEvents) {
       window.removeEventListener(type, release)
     }
@@ -29,12 +40,12 @@ export const keepInView = (element: Element | null | undefined) => {
   }
 
   const tick = () => {
-    if (isReleased) {
+    if (isReleased || run !== activeRun) {
       finish()
       return
     }
     const delta = element.getBoundingClientRect().top - startTop
-    if (delta !== 0) {
+    if (delta > 0 || (delta < 0 && !onlyDown)) {
       window.scrollBy(0, delta)
       hasMoved = true
       stillFrames = 0

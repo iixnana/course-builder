@@ -1,6 +1,6 @@
 import { use, type PropsWithChildren } from 'react'
 import { createPortal } from 'react-dom'
-import { HeaderActionsContext } from './headerActionsContext'
+import { HeaderActionsContext } from '../../context/headerActionsContext'
 
 export const HeaderActions = ({ children }: PropsWithChildren) => {
   const slot = use(HeaderActionsContext)

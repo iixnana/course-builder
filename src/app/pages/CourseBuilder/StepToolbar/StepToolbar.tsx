@@ -13,7 +13,7 @@ import {
   IconToggleButton,
 } from '../../../components/IconButton/IconButton'
 import type { TrashedStep } from '../../../../model/course'
-import { TrashPopover } from './TrashPopover'
+import { TrashPopover } from '../Trash/TrashPopover'
 import { HeaderActions } from '../../../layout/HeaderActions'
 import './StepToolbar.css'
 

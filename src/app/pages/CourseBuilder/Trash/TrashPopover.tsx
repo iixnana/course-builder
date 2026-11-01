@@ -12,7 +12,7 @@ import {
   type TrashedStep,
 } from '../../../../model/course'
 import '../../../components/Card/Card.css'
-import './StepCard.css'
+import '../StepCard/StepCard.css'
 import './TrashPopover.css'
 
 interface TrashPopoverProps {
@@ -75,7 +75,7 @@ const TrashPopoverContent = ({
                 </span>
                 <IconButton
                   label="Restore"
-                  className="trash-item-restore"
+                  variant="primary"
                   onPress={() => actAndClose(() => onRestoreStep(step.id))}
                 >
                   <ArchiveRestore />

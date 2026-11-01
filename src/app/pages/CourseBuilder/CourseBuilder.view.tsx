@@ -4,9 +4,9 @@ import { HideAway } from '../../components/HideAway/HideAway'
 import { InlineTextField } from '../../components/InlineTextField/InlineTextField'
 import { useGrowIn } from '../../../hooks/useGrowIn'
 import type { Course, Step } from '../../../model/course'
-import { AddStepPanel } from './parts/AddStepPanel'
-import { StepList, type StepListProps } from './parts/StepList'
-import { StepToolbar } from './parts/StepToolbar'
+import { AddStepPanel } from './AddStep/AddStepPanel'
+import { StepList, type StepListProps } from './StepList/StepList'
+import { StepToolbar } from './StepToolbar/StepToolbar'
 import './CourseBuilder.css'
 
 export interface CourseBuilderViewProps extends Omit<StepListProps, 'steps'> {

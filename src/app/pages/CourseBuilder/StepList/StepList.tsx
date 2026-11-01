@@ -29,7 +29,7 @@ import { DragSwingOverlay, type DropRect } from './DragSwingOverlay'
 import { ExitingStep } from './ExitingStep'
 import { SettlingOverlay } from './SettlingOverlay'
 import { SortableStep } from './SortableStep'
-import { StepCard } from './StepCard'
+import { StepCard } from '../StepCard/StepCard'
 import '../../../components/Card/Card.css'
 import './StepList.css'
 
@@ -37,6 +37,7 @@ export interface StepListProps {
   steps: Step[]
   editingId: string | null
   isLocked: boolean
+  swiftCloseId: string | null
   collapsedIds: ReadonlySet<string>
   onMoveSteps: (
     ids: string[],
@@ -53,6 +54,7 @@ export interface StepListProps {
 interface ExitingItem {
   step: Step
   index: number
+  wasEditing: boolean
 }
 
 type ListItem =
@@ -99,6 +101,7 @@ export const StepList = ({
   steps,
   editingId,
   isLocked,
+  swiftCloseId,
   collapsedIds,
   onMoveSteps,
   onToggleCollapsed,
@@ -116,6 +119,7 @@ export const StepList = ({
   const list = useRef<HTMLOListElement>(null)
   const [previousSteps, setPreviousSteps] = useState(steps)
   const [exiting, setExiting] = useState<ExitingItem[]>([])
+  const [previousEditingId, setPreviousEditingId] = useState(editingId)
   const [flipFrom, setFlipFrom] = useState<Map<string, number> | null>(null)
   const [isDropping, setIsDropping] = useState(false)
 
@@ -124,7 +128,9 @@ export const StepList = ({
     const ids = new Set(steps.map((step) => step.id))
     const removed = hasMotion
       ? previousSteps.flatMap((step, index) =>
-          ids.has(step.id) ? [] : [{ step, index }],
+          ids.has(step.id)
+            ? []
+            : [{ step, index, wasEditing: step.id === previousEditingId }],
         )
       : []
     setExiting((current) => [
@@ -137,6 +143,7 @@ export const StepList = ({
       setFlipFrom(readStepOffsets())
     }
   }
+  if (editingId !== previousEditingId) setPreviousEditingId(editingId)
 
   const removeExiting = useCallback((id: string) => {
     setExiting((current) => current.filter((item) => item.step.id !== id))
@@ -260,6 +267,7 @@ export const StepList = ({
                 key={listItem.item.step.id}
                 step={listItem.item.step}
                 isCollapsed={collapsedIds.has(listItem.item.step.id)}
+                isEditing={listItem.item.wasEditing}
                 onExited={removeExiting}
               />
             ) : (
@@ -280,6 +288,7 @@ export const StepList = ({
                     step={listItem.step}
                     dragHandle={dragHandle}
                     isLocked={isLocked}
+                    isSwiftClose={swiftCloseId === listItem.step.id}
                     isCollapsed={collapsedIds.has(listItem.step.id)}
                     isEditing={editingId === listItem.step.id}
                     onToggleCollapsed={() =>

@@ -1,5 +1,5 @@
 import { ImageUp, Link } from 'lucide-react'
-import { useState, type FormEvent } from 'react'
+import { useRef, useState, type FormEvent } from 'react'
 import {
   DropZone,
   FileTrigger,
@@ -10,6 +10,7 @@ import {
   isFileDropItem,
   type DropItem,
 } from 'react-aria-components'
+import { BlueberryLoader } from '../../../components/BlueberryLoader/BlueberryLoader'
 import { Button } from '../../../components/Button/Button'
 import { Modal } from '../../../components/Modal/Modal'
 import { TextField } from '../../../components/TextField/TextField'
@@ -43,6 +44,7 @@ const fileNameFromLink = (link: string) =>
 
 const UploadPanel = ({ onPick }: Pick<ImagePickerProps, 'onPick'>) => {
   const [error, setError] = useState<string | null>(null)
+  const [isUploading, setIsUploading] = useState(false)
 
   const upload = async (file: File | undefined) => {
     if (!file) return
@@ -55,10 +57,17 @@ const UploadPanel = ({ onPick }: Pick<ImagePickerProps, 'onPick'>) => {
       return
     }
     setError(null)
-    onPick({
-      url: await compressImage(file),
-      title: imageTitleFromName(file.name),
-    })
+    setIsUploading(true)
+    try {
+      onPick({
+        url: await compressImage(file),
+        title: imageTitleFromName(file.name),
+      })
+    } catch {
+      setError('That image would not open. Try another one.')
+    } finally {
+      setIsUploading(false)
+    }
   }
 
   const dropFile = async (items: DropItem[]) => {
@@ -71,6 +80,8 @@ const UploadPanel = ({ onPick }: Pick<ImagePickerProps, 'onPick'>) => {
       <DropZone
         className="image-drop-zone"
         aria-label="Drop an image here"
+        aria-busy={isUploading}
+        isDisabled={isUploading}
         getDropOperation={() => 'copy'}
         onDrop={(event) => void dropFile(event.items)}
       >
@@ -85,6 +96,9 @@ const UploadPanel = ({ onPick }: Pick<ImagePickerProps, 'onPick'>) => {
         <p className="image-picker-hint">
           Any image up to 10 MB. Big photos are resized for you.
         </p>
+        {isUploading && (
+          <BlueberryLoader label="Uploading the image" isInline />
+        )}
       </DropZone>
       {error && (
         <p className="image-picker-error" role="alert">
@@ -98,11 +112,21 @@ const UploadPanel = ({ onPick }: Pick<ImagePickerProps, 'onPick'>) => {
 const LinkPanel = ({ onPick }: Pick<ImagePickerProps, 'onPick'>) => {
   const [link, setLink] = useState('')
   const [status, setStatus] = useState<LinkStatus>('idle')
+  const [isCommitted, setIsCommitted] = useState(false)
+  const isPasting = useRef(false)
   const trimmed = link.trim()
   const isValid = isWebLink(trimmed)
+  const linkError = !isCommitted
+    ? null
+    : trimmed && !isValid
+      ? 'Paste a link that starts with https://'
+      : status === 'broken'
+        ? 'Check that the link goes straight to an image, then try again.'
+        : null
 
   const submit = (event: FormEvent) => {
     event.preventDefault()
+    setIsCommitted(true)
     if (status !== 'ready') return
     onPick({
       url: trimmed,
@@ -117,10 +141,17 @@ const LinkPanel = ({ onPick }: Pick<ImagePickerProps, 'onPick'>) => {
         type="url"
         placeholder="https://"
         value={link}
+        errorMessage={linkError}
+        onPaste={() => {
+          isPasting.current = true
+        }}
         onChange={(value) => {
           setLink(value)
           setStatus(isWebLink(value.trim()) ? 'loading' : 'idle')
+          setIsCommitted(isPasting.current)
+          isPasting.current = false
         }}
+        onBlur={() => setIsCommitted(true)}
       />
       <div className="image-link-preview" data-status={status}>
         {isValid ? (
@@ -128,17 +159,20 @@ const LinkPanel = ({ onPick }: Pick<ImagePickerProps, 'onPick'>) => {
             key={trimmed}
             src={trimmed}
             alt=""
-            onLoad={() => setStatus('ready')}
+            onLoad={(event) => {
+              const image = event.currentTarget
+              void image.decode().then(
+                () => image.isConnected && setStatus('ready'),
+                () => image.isConnected && setStatus('broken'),
+              )
+            }}
             onError={() => setStatus('broken')}
           />
         ) : null}
+        {status === 'loading' && (
+          <BlueberryLoader label="Loading the image" isInline />
+        )}
       </div>
-      <p className="image-picker-hint" role="status">
-        {trimmed && !isValid && 'Paste a link that starts with https://'}
-        {status === 'loading' && 'Loading the image…'}
-        {status === 'broken' &&
-          'Check that the link goes straight to an image, then try again.'}
-      </p>
       <Button type="submit" isDisabled={status !== 'ready'}>
         Add
       </Button>

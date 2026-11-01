@@ -2,11 +2,12 @@ import { useEffect, useRef } from 'react'
 import type { Step } from '../../../../model/course'
 import { animatePresence } from '../../../../utils/presence'
 import { DragHandle } from './DragHandle'
-import { StepCard } from './StepCard'
+import { StepCard } from '../StepCard/StepCard'
 
 interface ExitingStepProps {
   step: Step
   isCollapsed: boolean
+  isEditing: boolean
   onExited: (id: string) => void
 }
 
@@ -15,6 +16,7 @@ const ignore = () => undefined
 export const ExitingStep = ({
   step,
   isCollapsed,
+  isEditing,
   onExited,
 }: ExitingStepProps) => {
   const node = useRef<HTMLLIElement>(null)
@@ -41,7 +43,7 @@ export const ExitingStep = ({
         step={step}
         dragHandle={<DragHandle tabIndex={-1} isDecorative />}
         isCollapsed={isCollapsed}
-        isEditing={false}
+        isEditing={isEditing}
         onToggleCollapsed={ignore}
         onEdit={ignore}
         onDiscard={ignore}

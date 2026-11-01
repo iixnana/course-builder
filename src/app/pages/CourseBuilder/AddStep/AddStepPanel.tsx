@@ -1,9 +1,7 @@
 import { DialogTrigger } from 'react-aria-components'
-import { BubbleBurst } from '../../../components/BubbleBurst/BubbleBurst'
 import { HideAway } from '../../../components/HideAway/HideAway'
 import { IconButton } from '../../../components/IconButton/IconButton'
 import { StepTypeIcon } from '../../../components/StepTypeIcon/StepTypeIcon'
-import { useBubbleBurst } from '../../../../hooks/useBubbleBurst'
 import {
   createImageStep,
   createStep,
@@ -12,7 +10,7 @@ import {
   type Step,
   type StepType,
 } from '../../../../model/course'
-import { ImagePickerDialog } from './ImagePickerDialog'
+import { ImagePickerDialog } from '../ImagePicker/ImagePickerDialog'
 import './AddStepPanel.css'
 
 interface AddStepPanelProps {
@@ -25,23 +23,16 @@ interface AddStepButtonProps {
   onPress?: () => void
 }
 
-const AddStepButton = ({ type, onPress }: AddStepButtonProps) => {
-  const { burst, triggerBurst } = useBubbleBurst()
-
-  return (
-    <IconButton
-      label={`Add ${stepTypeLabel[type]}`}
-      className="add-step-button"
-      onPress={() => {
-        triggerBurst()
-        onPress?.()
-      }}
-    >
-      <StepTypeIcon type={type} />
-      <BubbleBurst burst={burst} />
-    </IconButton>
-  )
-}
+const AddStepButton = ({ type, onPress }: AddStepButtonProps) => (
+  <IconButton
+    label={`Add ${stepTypeLabel[type]}`}
+    variant="primary"
+    className="add-step-button"
+    onPress={onPress}
+  >
+    <StepTypeIcon type={type} />
+  </IconButton>
+)
 
 export const AddStepPanel = ({ isEmpty, onAddStep }: AddStepPanelProps) => (
   <div

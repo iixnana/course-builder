@@ -32,11 +32,6 @@
   overflow-wrap: anywhere;
 }
 
-.icon-button.trash-item-restore {
-  color: var(--color-cream);
-  background: var(--color-chocolate-800);
-}
-
 .trash-popover {
   --card-padding: 0;
 

@@ -1,14 +1,20 @@
 import { useEffect, useLayoutEffect, useRef, type RefObject } from 'react'
-import { motion } from '../utils/presence'
+import { motion, presenceSpaceDuration } from '../utils/presence'
 import { usePrefersReducedMotion } from './usePrefersReducedMotion'
+
+interface ContentSwapOptions {
+  isMatchingEntry?: boolean
+}
 
 export const useContentSwap = (
   ref: RefObject<HTMLElement | null>,
   trigger: unknown,
+  { isMatchingEntry = false }: ContentSwapOptions = {},
 ) => {
   const hasMotion = !usePrefersReducedMotion()
   const lastHeight = useRef(0)
   const lastTrigger = useRef(trigger)
+  const lastScroll = useRef(0)
 
   useLayoutEffect(() => {
     const element = ref.current
@@ -21,11 +27,23 @@ export const useContentSwap = (
     if (!hasChanged || !hasMotion || from === 0 || to === 0 || from === to) {
       return
     }
-    const { duration, easing } = motion()
+    const { easing } = motion()
+    const duration = isMatchingEntry
+      ? presenceSpaceDuration()
+      : motion().duration
     const heights = (end: number) => [
       { height: `${from}px`, overflow: 'hidden' },
       { height: `${end}px`, overflow: 'hidden' },
     ]
+    const root = document.documentElement
+    const isClamped =
+      window.scrollY < lastScroll.current &&
+      window.scrollY >= root.scrollHeight - window.innerHeight - 1
+    if (isClamped) {
+      element.style.height = `${from}px`
+      window.scrollTo(0, lastScroll.current)
+      element.style.removeProperty('height')
+    }
     const animation = element.animate(heights(to), { duration, easing })
 
     const content = element.firstElementChild
@@ -57,7 +75,7 @@ export const useContentSwap = (
         },
       )
     }
-  }, [ref, trigger, hasMotion])
+  }, [ref, trigger, hasMotion, isMatchingEntry])
 
   useEffect(() => {
     const element = ref.current
@@ -68,4 +86,13 @@ export const useContentSwap = (
     observer.observe(element)
     return () => observer.disconnect()
   }, [ref])
+
+  useEffect(() => {
+    const track = () => {
+      lastScroll.current = window.scrollY
+    }
+    track()
+    window.addEventListener('scroll', track, { passive: true })
+    return () => window.removeEventListener('scroll', track)
+  }, [])
 }

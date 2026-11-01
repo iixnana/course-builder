@@ -16,7 +16,7 @@ import { usePrefersReducedMotion } from '../../../../hooks/usePrefersReducedMoti
 import { motion } from '../../../../utils/presence'
 import { keepTabWithin } from '../../../../utils/keepTabWithin'
 import { stepSummary, stepTypeLabel, type Step } from '../../../../model/course'
-import { StepEditor } from './StepEditor'
+import { StepEditor } from '../StepEditor/StepEditor'
 import { StepPreview } from './StepPreview'
 import './StepCard.css'
 
@@ -24,6 +24,7 @@ interface StepCardProps {
   step: Step
   dragHandle: ReactNode
   isLocked?: boolean
+  isSwiftClose?: boolean
   isCollapsed: boolean
   isEditing: boolean
   onToggleCollapsed: () => void
@@ -37,6 +38,7 @@ export const StepCard = ({
   step,
   dragHandle,
   isLocked = false,
+  isSwiftClose = false,
   isCollapsed,
   isEditing,
   onToggleCollapsed,
@@ -77,15 +79,15 @@ export const StepCard = ({
 
   useEffect(() => {
     if (!isLeaving) return
-    const fadeOut = hasMotion ? motion().duration * 0.3 : 0
+    const fadeOut = hasMotion && !isSwiftClose ? motion().duration * 0.3 : 0
     const timer = window.setTimeout(
       () => setIsShowingEditor(isEditing),
       fadeOut,
     )
     return () => window.clearTimeout(timer)
-  }, [isLeaving, isEditing, hasMotion])
+  }, [isLeaving, isEditing, hasMotion, isSwiftClose])
 
-  useContentSwap(bodyClip, isShowingEditor)
+  useContentSwap(bodyClip, isShowingEditor, { isMatchingEntry: isSwiftClose })
 
   const focusEditButton = () =>
     card.current?.querySelector<HTMLElement>('.step-edit-button')?.focus()
