@@ -1,11 +1,6 @@
-export interface HistoryEntry {
-  label: string
-  mergeKey?: string
-}
-
 interface Snapshot<T> {
   state: T
-  entry: HistoryEntry | null
+  mergeKey?: string
 }
 
 export interface History<T> {
@@ -18,23 +13,21 @@ const historyLimit = 100
 
 export const createHistory = <T>(state: T): History<T> => ({
   past: [],
-  present: { state, entry: null },
+  present: { state },
   future: [],
 })
 
 export const commit = <T>(
   history: History<T>,
   state: T,
-  entry: HistoryEntry,
+  mergeKey?: string,
 ): History<T> => {
-  const merges =
-    entry.mergeKey !== undefined &&
-    history.present.entry?.mergeKey === entry.mergeKey
+  const merges = mergeKey !== undefined && history.present.mergeKey === mergeKey
   return {
     past: merges
       ? history.past
       : [...history.past, history.present].slice(-historyLimit),
-    present: { state, entry },
+    present: { state, mergeKey },
     future: [],
   }
 }
@@ -62,8 +55,6 @@ export const redo = <T>(history: History<T>): History<T> => {
 export const forget = <T>(history: History<T>): History<T> =>
   createHistory(history.present.state)
 
-export const undoLabel = <T>(history: History<T>) =>
-  history.past.length > 0 ? history.present.entry?.label : undefined
+export const canUndo = <T>(history: History<T>) => history.past.length > 0
 
-export const redoLabel = <T>(history: History<T>) =>
-  history.future[0]?.entry?.label
+export const canRedo = <T>(history: History<T>) => history.future.length > 0

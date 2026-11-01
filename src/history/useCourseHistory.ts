@@ -7,16 +7,16 @@ import {
   redo,
   undo,
   type History,
-  type HistoryEntry,
-} from '../model/history'
-import type { CourseRepository } from './CourseRepository'
+} from './history'
+import type { CourseRepository } from '../data/CourseRepository'
 
 type LoadState =
   | { status: 'loading' }
   | { status: 'ready'; history: History<Course> }
   | { status: 'error'; error: unknown }
 
-interface UpdateOptions extends HistoryEntry {
+interface UpdateOptions {
+  mergeKey?: string
   isPermanent?: boolean
 }
 
@@ -58,10 +58,10 @@ export const useCourseHistory = (repository: CourseRepository) => {
   const updateCourse = useCallback(
     (
       update: (course: Course) => Course,
-      { isPermanent = false, ...entry }: UpdateOptions,
+      { mergeKey, isPermanent = false }: UpdateOptions = {},
     ) =>
       apply((history) => {
-        const next = commit(history, update(history.present.state), entry)
+        const next = commit(history, update(history.present.state), mergeKey)
         return isPermanent ? forget(next) : next
       }),
     [apply],

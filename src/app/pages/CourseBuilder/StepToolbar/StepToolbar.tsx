@@ -17,8 +17,8 @@ import './StepToolbar.css'
 
 interface StepToolbarProps {
   isDisabled?: boolean
-  undoLabel?: string
-  redoLabel?: string
+  canUndo: boolean
+  canRedo: boolean
   stepCount: number
   isAllCollapsed: boolean
   isLocked: boolean
@@ -34,8 +34,8 @@ interface StepToolbarProps {
 
 export const StepToolbar = ({
   isDisabled = false,
-  undoLabel,
-  redoLabel,
+  canUndo,
+  canRedo,
   stepCount,
   isAllCollapsed,
   isLocked,
@@ -60,15 +60,15 @@ export const StepToolbar = ({
         {isLocked ? <Lock key="locked" /> : <LockOpen key="open" />}
       </IconToggleButton>
       <IconButton
-        label={undoLabel ? `Undo: ${undoLabel}` : 'Undo'}
-        isDisabled={isDisabled || isLocked || !undoLabel}
+        label="Undo"
+        isDisabled={isDisabled || isLocked || !canUndo}
         onPress={onUndo}
       >
         <Undo2 />
       </IconButton>
       <IconButton
-        label={redoLabel ? `Redo: ${redoLabel}` : 'Redo'}
-        isDisabled={isDisabled || isLocked || !redoLabel}
+        label="Redo"
+        isDisabled={isDisabled || isLocked || !canRedo}
         onPress={onRedo}
       >
         <Redo2 />
