@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef, type ReactNode } from 'react'
-import { springKeyframes } from '../../../utils/spring'
+import { springKeyframes } from '../../../../utils/spring'
 import type { DropRect } from './DragSwingOverlay'
 
 interface SettlingOverlayProps {

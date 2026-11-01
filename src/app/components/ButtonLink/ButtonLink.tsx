@@ -1,5 +1,4 @@
-import { composeRenderProps, Link, type LinkProps } from 'react-aria-components'
-import { ButtonGoo } from '../Button/ButtonGoo'
+import { Link, composeRenderProps, type LinkProps } from 'react-aria-components'
 import '../Button/Button.css'
 
 export const ButtonLink = ({ className, children, ...props }: LinkProps) => (
@@ -9,11 +8,6 @@ export const ButtonLink = ({ className, children, ...props }: LinkProps) => (
       className ? `button ${className}` : 'button',
     )}
   >
-    {composeRenderProps(children, (children) => (
-      <>
-        <ButtonGoo />
-        {children}
-      </>
-    ))}
+    {children}
   </Link>
 )

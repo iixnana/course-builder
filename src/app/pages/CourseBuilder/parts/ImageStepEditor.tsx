@@ -1,78 +1,52 @@
-import { Upload, X } from 'lucide-react'
-import { useState } from 'react'
-import { FileTrigger } from 'react-aria-components'
+import { ImageIcon, ImageUp } from 'lucide-react'
+import { DialogTrigger } from 'react-aria-components'
 import { Button } from '../../../components/Button/Button'
 import { TextField } from '../../../components/TextField/TextField'
-import type { ImageStep } from '../../../model/course'
-import { readFileAsDataUrl } from '../../../utils/readFileAsDataUrl'
+import type { ImageStep } from '../../../../model/course'
+import { ImagePickerDialog } from './ImagePickerDialog'
 
 interface ImageStepEditorProps {
   step: ImageStep
   onChange: (step: ImageStep) => void
 }
 
-const maxFileSize = 2 * 1024 * 1024
-
-export const ImageStepEditor = ({ step, onChange }: ImageStepEditorProps) => {
-  const [error, setError] = useState<string | null>(null)
-  const isUploaded = step.url.startsWith('data:')
-
-  const uploadImage = async (files: FileList | null) => {
-    const file = files?.[0]
-    if (!file) return
-    if (file.size > maxFileSize) {
-      setError('That image is over 2 MB. Pick a smaller one.')
-      return
-    }
-    setError(null)
-    onChange({ ...step, url: await readFileAsDataUrl(file) })
-  }
-
-  return (
-    <>
-      <TextField
-        label="Title"
-        placeholder="e.g. The pipe alarm"
-        value={step.title}
-        onChange={(title) => onChange({ ...step, title })}
+export const ImageStepEditor = ({ step, onChange }: ImageStepEditorProps) => (
+  <>
+    <TextField
+      label="Title"
+      placeholder="e.g. The pipe alarm"
+      value={step.title}
+      onChange={(title) => onChange({ ...step, title })}
+    />
+    {step.url ? (
+      <img className="step-image" src={step.url} alt="" />
+    ) : (
+      <div className="step-image-placeholder">
+        <ImageIcon aria-hidden="true" />
+        <p>Choose an image to show here.</p>
+      </div>
+    )}
+    <DialogTrigger>
+      <Button variant="secondary">
+        <ImageUp aria-hidden="true" />
+        {step.url ? 'Replace Image' : 'Add Image'}
+      </Button>
+      <ImagePickerDialog
+        title={step.url ? 'Replace image' : 'Add an image'}
+        onPick={({ url, title }) =>
+          onChange({
+            ...step,
+            url,
+            title: step.title.trim() ? step.title : title,
+          })
+        }
       />
-      {step.url && <img className="step-image" src={step.url} alt="" />}
-      <FileTrigger
-        acceptedFileTypes={['image/*']}
-        onSelect={(files) => void uploadImage(files)}
-      >
-        <Button variant="secondary">
-          <Upload aria-hidden="true" />
-          {step.url ? 'Replace image' : 'Upload image'}
-        </Button>
-      </FileTrigger>
-      {error && (
-        <p className="step-editor-error" role="alert">
-          {error}
-        </p>
-      )}
-      <TextField
-        label="Or paste an image link"
-        type="url"
-        placeholder="https://"
-        value={isUploaded ? '' : step.url}
-        onChange={(url) => onChange({ ...step, url })}
-      />
-      <TextField
-        label="Describe the image for screen readers"
-        placeholder="e.g. An Oompa-Loompa pulling the pipe alarm"
-        value={step.alt}
-        onChange={(alt) => onChange({ ...step, alt })}
-      />
-      {step.url && (
-        <Button
-          variant="secondary"
-          onPress={() => onChange({ ...step, url: '' })}
-        >
-          <X aria-hidden="true" />
-          Remove image
-        </Button>
-      )}
-    </>
-  )
-}
+    </DialogTrigger>
+    <TextField
+      label="Describe the image for screen readers (optional)"
+      placeholder="e.g. An Oompa-Loompa pulling the pipe alarm"
+      value={step.alt}
+      onChange={(alt) => onChange({ ...step, alt })}
+    />
+  </>
+)

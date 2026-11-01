@@ -1,21 +1,38 @@
 .modal-overlay {
   position: fixed;
   inset: 0;
-  z-index: 10;
+  z-index: 100001;
   display: grid;
   place-items: center;
   padding: var(--page-gutter);
+  overflow-y: auto;
   background: color-mix(in sRGB, var(--color-chocolate-950) 70%, transparent);
+
+  &[data-entering] {
+    animation: modal-fade calc(var(--motion-duration) / 2) var(--motion-easing)
+      var(--burst-pause) backwards;
+  }
+
+  &[data-exiting] {
+    animation: modal-fade calc(var(--motion-duration) / 2) var(--motion-easing)
+      var(--burst-pause) reverse both;
+  }
 }
 
 .modal {
+  --card-padding: 0;
+
   width: min(100%, var(--content-width));
-  max-height: calc(100dvh - 2 * var(--page-gutter));
-  overflow-y: auto;
-  color: var(--color-text);
-  background: var(--color-surface);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-card);
+
+  &[data-entering] {
+    animation: modal-rise calc(var(--motion-duration) / 2) var(--motion-easing)
+      var(--burst-pause) backwards;
+  }
+
+  &[data-exiting] {
+    animation: modal-rise calc(var(--motion-duration) / 2) var(--motion-easing)
+      var(--burst-pause) reverse both;
+  }
 }
 
 .modal-dialog {
@@ -25,9 +42,17 @@
   outline: none;
 }
 
+.modal-header {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  justify-content: space-between;
+  padding-block-end: var(--space-4);
+  border-block-end: var(--border-width-sm) dashed var(--color-accent);
+}
+
 .modal-title {
-  font-family: var(--font-body);
-  font-weight: var(--font-weight-bold);
+  min-width: 0;
 }
 
 .modal-actions {
@@ -35,4 +60,28 @@
   flex-wrap: wrap;
   gap: var(--space-2);
   justify-content: end;
+}
+
+@keyframes modal-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes modal-rise {
+  from {
+    opacity: 0;
+    scale: 0.94;
+    translate: 0 var(--space-4);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .modal-overlay,
+  .modal {
+    &[data-entering],
+    &[data-exiting] {
+      animation: none;
+    }
+  }
 }

@@ -1,6 +1,6 @@
 import { useDndMonitor } from '@dnd-kit/core'
 import { useEffect, useRef, type ReactNode } from 'react'
-import { createSpring } from '../../../utils/spring'
+import { createSpring } from '../../../../utils/spring'
 
 export interface DropRect {
   top: number

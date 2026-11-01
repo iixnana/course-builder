@@ -3,9 +3,8 @@ import {
   composeRenderProps,
   type ButtonProps as AriaButtonProps,
 } from 'react-aria-components'
-import { useBubbleBurst } from '../../hooks/useBubbleBurst'
+import { useBubbleBurst } from '../../../hooks/useBubbleBurst'
 import { BubbleBurst } from '../BubbleBurst/BubbleBurst'
-import { ButtonGoo } from './ButtonGoo'
 import './Button.css'
 
 interface ButtonProps extends AriaButtonProps {
@@ -20,7 +19,6 @@ export const Button = ({
   ...props
 }: ButtonProps) => {
   const { burst, triggerBurst } = useBubbleBurst()
-  const hasBurst = variant === 'primary'
 
   return (
     <AriaButton
@@ -30,15 +28,14 @@ export const Button = ({
         className ? `button ${className}` : 'button',
       )}
       onPress={(event) => {
-        if (hasBurst) triggerBurst()
+        triggerBurst()
         onPress?.(event)
       }}
     >
       {composeRenderProps(children, (children) => (
         <>
-          <ButtonGoo />
           {children}
-          {hasBurst && <BubbleBurst burst={burst} />}
+          <BubbleBurst burst={burst} />
         </>
       ))}
     </AriaButton>

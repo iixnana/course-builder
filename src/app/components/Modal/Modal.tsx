@@ -1,3 +1,4 @@
+import { X } from 'lucide-react'
 import {
   Dialog,
   Heading,
@@ -5,6 +6,8 @@ import {
   Modal as AriaModal,
   type DialogProps,
 } from 'react-aria-components'
+import { IconButton } from '../IconButton/IconButton'
+import '../Card/Card.css'
 import './Modal.css'
 
 interface ModalProps {
@@ -12,6 +15,7 @@ interface ModalProps {
   isOpen?: boolean
   onOpenChange?: (isOpen: boolean) => void
   role?: DialogProps['role']
+  hasCloseButton?: boolean
   children: DialogProps['children']
 }
 
@@ -20,6 +24,7 @@ export const Modal = ({
   isOpen,
   onOpenChange,
   role = 'dialog',
+  hasCloseButton = false,
   children,
 }: ModalProps) => (
   <ModalOverlay
@@ -28,13 +33,20 @@ export const Modal = ({
     onOpenChange={onOpenChange}
     isDismissable={role === 'dialog'}
   >
-    <AriaModal className="modal">
+    <AriaModal className="card modal">
       <Dialog className="modal-dialog" role={role}>
         {(renderProps) => (
           <>
-            <Heading slot="title" level={2} className="modal-title">
-              {title}
-            </Heading>
+            <div className="modal-header">
+              <Heading slot="title" level={2} className="modal-title">
+                {title}
+              </Heading>
+              {hasCloseButton && (
+                <IconButton label="Close" onPress={renderProps.close}>
+                  <X />
+                </IconButton>
+              )}
+            </div>
             {typeof children === 'function' ? children(renderProps) : children}
           </>
         )}

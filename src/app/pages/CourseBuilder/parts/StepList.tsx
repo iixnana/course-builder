@@ -21,9 +21,9 @@ import {
   useRef,
   useState,
 } from 'react'
-import { usePrefersReducedMotion } from '../../../hooks/usePrefersReducedMotion'
-import { stepIssues, stepSummary, type Step } from '../../../model/course'
-import { motion } from '../../../utils/presence'
+import { usePrefersReducedMotion } from '../../../../hooks/usePrefersReducedMotion'
+import { stepSummary, type Step } from '../../../../model/course'
+import { motion } from '../../../../utils/presence'
 import { DragHandle } from './DragHandle'
 import { DragSwingOverlay, type DropRect } from './DragSwingOverlay'
 import { ExitingStep } from './ExitingStep'
@@ -36,6 +36,7 @@ import './StepList.css'
 export interface StepListProps {
   steps: Step[]
   editingId: string | null
+  isLocked: boolean
   collapsedIds: ReadonlySet<string>
   onMoveSteps: (
     ids: string[],
@@ -44,6 +45,7 @@ export interface StepListProps {
   ) => void
   onToggleCollapsed: (id: string) => void
   onEdit: (id: string | null) => void
+  onDiscardEdit: (id: string) => void
   onChangeStep: (step: Step) => void
   onTrashStep: (id: string) => void
 }
@@ -96,10 +98,12 @@ const ignore = () => undefined
 export const StepList = ({
   steps,
   editingId,
+  isLocked,
   collapsedIds,
   onMoveSteps,
   onToggleCollapsed,
   onEdit,
+  onDiscardEdit,
   onChangeStep,
   onTrashStep,
 }: StepListProps) => {
@@ -200,6 +204,7 @@ export const StepList = ({
         isEditing={false}
         onToggleCollapsed={ignore}
         onEdit={ignore}
+        onDiscard={ignore}
         onChange={ignore}
         onTrash={ignore}
       />
@@ -242,56 +247,56 @@ export const StepList = ({
         items={steps.map((step) => step.id)}
         strategy={verticalListSortingStrategy}
       >
-        {listItems.length > 0 && (
-          <ol
-            ref={list}
-            className="step-list"
-            role="list"
-            aria-labelledby="course-steps-title"
-          >
-            {listItems.map((listItem) =>
-              listItem.kind === 'exiting' ? (
-                <ExitingStep
-                  key={listItem.item.step.id}
-                  step={listItem.item.step}
-                  isCollapsed={collapsedIds.has(listItem.item.step.id)}
-                  onExited={removeExiting}
-                />
-              ) : (
-                <SortableStep
-                  key={listItem.step.id}
-                  id={listItem.step.id}
-                  isDragDisabled={editingId !== null}
-                  isPlaceholder={
-                    activeId === listItem.step.id ||
-                    settling?.id === listItem.step.id
-                  }
-                  isSettling={settling?.id === listItem.step.id}
-                  isInvalid={stepIssues(listItem.step).length > 0}
-                  hasMotion={hasMotion}
-                  isListMounted={isListMounted}
-                >
-                  {(dragHandle) => (
-                    <StepCard
-                      step={listItem.step}
-                      dragHandle={dragHandle}
-                      isCollapsed={collapsedIds.has(listItem.step.id)}
-                      isEditing={editingId === listItem.step.id}
-                      onToggleCollapsed={() =>
-                        onToggleCollapsed(listItem.step.id)
-                      }
-                      onEdit={(isEditing) =>
-                        onEdit(isEditing ? listItem.step.id : null)
-                      }
-                      onChange={onChangeStep}
-                      onTrash={() => onTrashStep(listItem.step.id)}
-                    />
-                  )}
-                </SortableStep>
-              ),
-            )}
-          </ol>
-        )}
+        <ol
+          ref={list}
+          className="step-list"
+          data-empty={steps.length === 0 || undefined}
+          role="list"
+          aria-labelledby="course-steps-title"
+        >
+          {listItems.map((listItem) =>
+            listItem.kind === 'exiting' ? (
+              <ExitingStep
+                key={listItem.item.step.id}
+                step={listItem.item.step}
+                isCollapsed={collapsedIds.has(listItem.item.step.id)}
+                onExited={removeExiting}
+              />
+            ) : (
+              <SortableStep
+                key={listItem.step.id}
+                id={listItem.step.id}
+                isDragDisabled={isLocked || editingId !== null}
+                isPlaceholder={
+                  activeId === listItem.step.id ||
+                  settling?.id === listItem.step.id
+                }
+                isSettling={settling?.id === listItem.step.id}
+                hasMotion={hasMotion}
+                isListMounted={isListMounted}
+              >
+                {(dragHandle) => (
+                  <StepCard
+                    step={listItem.step}
+                    dragHandle={dragHandle}
+                    isLocked={isLocked}
+                    isCollapsed={collapsedIds.has(listItem.step.id)}
+                    isEditing={editingId === listItem.step.id}
+                    onToggleCollapsed={() =>
+                      onToggleCollapsed(listItem.step.id)
+                    }
+                    onEdit={(isEditing) =>
+                      onEdit(isEditing ? listItem.step.id : null)
+                    }
+                    onChange={onChangeStep}
+                    onDiscard={() => onDiscardEdit(listItem.step.id)}
+                    onTrash={() => onTrashStep(listItem.step.id)}
+                  />
+                )}
+              </SortableStep>
+            ),
+          )}
+        </ol>
       </SortableContext>
 
       <DragOverlay dropAnimation={null}>

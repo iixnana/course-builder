@@ -2,7 +2,7 @@ import type { Course } from '../model/course'
 import type { CourseRepository } from './CourseRepository'
 import { demoCourse } from './demoCourse'
 
-const storageKey = 'course-builder:course:v7'
+const storageKey = 'course-builder:course:v12'
 const save = async (course: Course) => {
   sessionStorage.setItem(storageKey, JSON.stringify(course))
 }

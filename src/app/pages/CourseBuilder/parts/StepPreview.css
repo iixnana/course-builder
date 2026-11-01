@@ -1,18 +1,14 @@
-.step-text {
-  max-width: var(--measure);
-  white-space: pre-wrap;
-}
-
 .step-empty {
   font-style: italic;
   opacity: 0.75;
 }
 
 .step-image {
-  width: 100%;
+  justify-self: center;
+  width: auto;
+  max-width: 100%;
+  height: auto;
   max-height: 20rem;
-  object-fit: contain;
-  background: var(--color-cream);
   border-radius: var(--radius-md);
 }
 

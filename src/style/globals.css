@@ -1,12 +1,9 @@
 :root {
   --font-body: Inter, system-ui, 'Segoe UI', Roboto, sans-serif;
-  --font-heading: 'Wonderbar', system-ui, 'Segoe UI', Roboto, sans-serif;
   --font-brand: 'Chocolate Factory', system-ui, 'Segoe UI', Roboto, sans-serif;
   --font-weight-regular: 400;
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
-
-  /* font size / line height pairs, all on the 4px grid */
   --font-size-sm: 0.75rem;
   --leading-sm: 1rem;
   --font-size-md: 1rem;
@@ -17,8 +14,6 @@
   --leading-xl: 2rem;
   --font-size-2xl: 2rem;
   --leading-2xl: 2.5rem;
-
-  /* --space-N = N × 4px */
   --space-1: 0.25rem;
   --space-2: 0.5rem;
   --space-3: 0.75rem;
@@ -29,8 +24,6 @@
   --space-16: 4rem;
   --touch-target: 2.75rem;
   --icon-size: 1.25rem;
-
-  /* max line length for running text, and page layout */
   --measure: 65ch;
   --page-width: 80rem;
   --content-width: 48rem;
@@ -117,9 +110,8 @@ h1 {
 }
 
 h2 {
-  font-family: var(--font-heading);
   font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-regular);
+  font-weight: var(--font-weight-bold);
   line-height: var(--leading-xl);
 }
 

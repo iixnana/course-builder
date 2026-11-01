@@ -1,6 +1,5 @@
 .add-step-panel {
   display: grid;
-  gap: var(--space-4);
   justify-items: center;
   padding: var(--space-6);
   color: var(--color-text);
@@ -10,6 +9,7 @@
 }
 
 .add-step-message {
+  padding-block-end: var(--space-4);
   font-weight: var(--font-weight-semibold);
 }
 

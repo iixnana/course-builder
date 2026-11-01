@@ -4,6 +4,7 @@
   position: relative;
   isolation: isolate;
   display: inline-flex;
+  gap: var(--space-2);
   align-items: center;
   justify-content: center;
   min-height: var(--touch-target);
@@ -17,48 +18,29 @@
   text-decoration: none;
   outline: none;
   transition:
-    background-color 150ms ease,
     scale 100ms ease-in,
     var(--focus-transition);
 
-  & > .button-goo {
+  &::before {
     position: absolute;
     inset: 0;
     z-index: -1;
-    pointer-events: none;
-    background: inherit;
+    content: '';
+    background: color-mix(in sRGB, currentColor 12%, transparent);
     border-radius: inherit;
-
-    &::before,
-    &::after {
-      position: absolute;
-      width: 4.4em;
-      height: 2.95em;
-      content: '';
-      background: inherit;
-      border-radius: 50%;
-      scale: 0;
-      transition: scale 600ms cubic-bezier(0.2, 0, 0, 1);
-    }
-
-    &::before {
-      inset-block-start: -25%;
-      inset-inline-start: 20%;
-    }
-
-    &::after {
-      inset-block-end: -25%;
-      inset-inline-end: 20%;
-    }
+    scale: 0;
+    transition: scale 200ms cubic-bezier(0.2, 0, 0, 1);
   }
 
-  &[data-hovered] {
-    background: var(--color-chocolate-800);
+  & svg {
+    flex-shrink: 0;
+    width: var(--icon-size);
+    height: var(--icon-size);
+  }
 
-    & > .button-goo::before,
-    & > .button-goo::after {
-      scale: 1;
-    }
+  &[data-hovered]::before,
+  &[data-pressed]::before {
+    scale: 1;
   }
 
   &[data-focus-visible] {
@@ -67,10 +49,6 @@
   }
 
   &[data-pressed] {
-    transform: translateY(var(--press-offset));
-  }
-
-  &[data-variant='primary'][data-pressed] {
     scale: 0.95;
   }
 
@@ -80,42 +58,24 @@
   }
 
   &[data-variant='secondary'] {
+    --bubble-color: var(--color-text);
+
     color: var(--color-text);
     background: transparent;
     box-shadow: inset 0 0 0 var(--border-width-sm) var(--color-chocolate-900);
-
-    & > .button-goo {
-      display: none;
-    }
 
     &[data-focus-visible] {
       box-shadow:
         inset 0 0 0 var(--border-width-sm) var(--color-chocolate-900),
         var(--focus-ring);
     }
-
-    &[data-hovered] {
-      background: color-mix(
-        in sRGB,
-        var(--color-chocolate-900) 10%,
-        transparent
-      );
-    }
   }
 
   &[data-variant='danger'] {
+    --bubble-color: var(--color-cherry);
+
     background: var(--color-cherry);
-
-    &[data-hovered] {
-      background: var(--color-cherry-800);
-    }
   }
-}
-
-.button-goo-filter {
-  position: absolute;
-  width: 0;
-  height: 0;
 }
 
 @media (width < 48rem) {
@@ -125,11 +85,11 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .button[data-variant='primary'][data-pressed] {
+  .button[data-pressed] {
     scale: none;
   }
 
-  .button > .button-goo {
-    display: none;
+  .button::before {
+    transition: none;
   }
 }

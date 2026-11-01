@@ -5,32 +5,34 @@ import {
   loaderAppearDelayMs,
   loaderMinimumMs,
 } from '../../components/BlueberryLoader/loaderTiming'
-import type { CourseRepository } from '../../data/CourseRepository'
-import { useCourseHistory } from '../../data/useCourseHistory'
+import type { CourseRepository } from '../../../data/CourseRepository'
+import { useCourseHistory } from '../../../data/useCourseHistory'
 import {
   addStep,
-  createStep,
   emptyTrash,
   moveSteps,
   renameCourse,
+  restoreAllSteps,
   restoreStep,
   stepTypeLabel,
   trashStep,
   updateStep,
   type Step,
-  type StepType,
-} from '../../model/course'
-import { redoLabel, undoLabel } from '../../model/history'
-import { isTextEntry } from '../../utils/isTextEntry'
-import { preloadCourseAssets } from '../../utils/preloadCourseAssets'
-import { simulatePrefetch } from '../../utils/simulatePrefetch'
+} from '../../../model/course'
+import { redoLabel, undoLabel } from '../../../model/history'
+import { isTextEntry } from '../../../utils/isTextEntry'
+import { preloadCourseAssets } from '../../../utils/preloadCourseAssets'
+import { simulatePrefetch } from '../../../utils/simulatePrefetch'
 import {
   findAddStepPanel,
   findFirstVisibleStepElement,
   findStepElement,
   keepInView,
-} from '../../utils/keepInView'
+} from '../../../utils/keepInView'
+import { demoResetEvent } from '../../layout/demoReset'
+import { demoCourse } from '../../../data/demoCourse'
 import { CourseBuilderView } from './CourseBuilder.view'
+import { StepToolbar } from './parts/StepToolbar'
 
 interface CourseBuilderProps {
   repository: CourseRepository
@@ -43,6 +45,8 @@ const withToggled = (ids: ReadonlySet<string>, id: string) => {
   return next
 }
 
+const ignore = () => undefined
+
 export const CourseBuilder = ({ repository }: CourseBuilderProps) => {
   const { loadState, updateCourse, undoChange, redoChange } =
     useCourseHistory(repository)
@@ -51,8 +55,10 @@ export const CourseBuilder = ({ repository }: CourseBuilderProps) => {
     new Set(),
   )
   const editSession = useRef(0)
+  const editStart = useRef<Step | null>(null)
   const [isRevealed, setIsRevealed] = useState(false)
   const [isLoaderLeaving, setIsLoaderLeaving] = useState(false)
+  const [isLocked, setIsLocked] = useState(false)
   const mountedAt = useRef(0)
   const loadedCourse =
     loadState.status === 'ready' ? loadState.history.present.state : null
@@ -62,7 +68,7 @@ export const CourseBuilder = ({ repository }: CourseBuilderProps) => {
   }, [])
 
   useEffect(() => {
-    if (!loadedCourse || isRevealed) return
+    if (!loadedCourse || isRevealed || isLoaderLeaving) return
     let isCancelled = false
     let frame = 0
     let timer = 0
@@ -77,8 +83,8 @@ export const CourseBuilder = ({ repository }: CourseBuilderProps) => {
         frame = requestAnimationFrame(() => {
           frame = requestAnimationFrame(() => {
             if (isCancelled) return
-            setIsLoaderLeaving(wasLoaderShown)
-            setIsRevealed(true)
+            if (wasLoaderShown) setIsLoaderLeaving(true)
+            else setIsRevealed(true)
           })
         })
       }, hold)
@@ -88,7 +94,7 @@ export const CourseBuilder = ({ repository }: CourseBuilderProps) => {
       window.clearTimeout(timer)
       cancelAnimationFrame(frame)
     }
-  }, [loadedCourse, isRevealed])
+  }, [loadedCourse, isRevealed, isLoaderLeaving])
 
   const startEditing = useCallback((id: string | null) => {
     editSession.current += 1
@@ -104,7 +110,7 @@ export const CourseBuilder = ({ repository }: CourseBuilderProps) => {
 
   useEffect(() => {
     const handleShortcut = (event: KeyboardEvent) => {
-      if (isTextEntry(event.target)) return
+      if (isLocked || isTextEntry(event.target)) return
       if (!(event.metaKey || event.ctrlKey)) return
       const key = event.key.toLowerCase()
       if (key === 'z' && !event.shiftKey) {
@@ -117,7 +123,18 @@ export const CourseBuilder = ({ repository }: CourseBuilderProps) => {
     }
     window.addEventListener('keydown', handleShortcut)
     return () => window.removeEventListener('keydown', handleShortcut)
-  }, [undoChange, redoChange])
+  }, [undoChange, redoChange, isLocked])
+
+  useEffect(() => {
+    const resetToDemo = () => {
+      startEditing(null)
+      setCollapsedIds(new Set())
+      setIsLocked(false)
+      updateCourse(() => demoCourse, { label: 'Reset to demo course' })
+    }
+    window.addEventListener(demoResetEvent, resetToDemo)
+    return () => window.removeEventListener(demoResetEvent, resetToDemo)
+  }, [startEditing, updateCourse])
 
   if (loadState.status === 'error') {
     throw loadState.error
@@ -126,17 +143,37 @@ export const CourseBuilder = ({ repository }: CourseBuilderProps) => {
   const withLoader = (content: ReactNode) => (
     <>
       {content}
-      {(!isRevealed || isLoaderLeaving) && (
+      {!isRevealed && (
         <BlueberryLoader
           label={`Loading ${appName}`}
-          isLeaving={isRevealed}
-          onLeft={() => setIsLoaderLeaving(false)}
+          isLeaving={isLoaderLeaving}
+          onLeft={() => {
+            setIsLoaderLeaving(false)
+            setIsRevealed(true)
+          }}
         />
       )}
     </>
   )
 
-  if (loadState.status === 'loading') return withLoader(null)
+  if (loadState.status === 'loading') {
+    return withLoader(
+      <StepToolbar
+        isDisabled
+        stepCount={0}
+        isAllCollapsed={false}
+        isLocked={false}
+        trash={[]}
+        onUndo={ignore}
+        onRedo={ignore}
+        onToggleAll={ignore}
+        onToggleLock={ignore}
+        onRestoreStep={ignore}
+        onRestoreAll={ignore}
+        onEmptyTrash={ignore}
+      />,
+    )
+  }
 
   const { history } = loadState
   const course = history.present.state
@@ -156,18 +193,23 @@ export const CourseBuilder = ({ repository }: CourseBuilderProps) => {
       undoLabel={undoLabel(history)}
       redoLabel={redoLabel(history)}
       isAllCollapsed={isAllCollapsed}
+      isLocked={isLocked}
+      onToggleLock={(shouldLock) => {
+        if (shouldLock) startEditing(null)
+        setIsLocked(shouldLock)
+      }}
       onRenameCourse={(title) =>
         updateCourse((course) => renameCourse(course, title), {
           label: 'Rename course',
           mergeKey: 'title',
         })
       }
-      onAddStep={(type: StepType) => {
+      onAddStep={(step: Step) => {
         keepInView(findAddStepPanel())
-        const step = createStep(type)
         updateCourse((course) => addStep(course, step), {
-          label: `Add ${stepTypeLabel[type].toLowerCase()} step`,
+          label: `Add ${stepTypeLabel[step.type].toLowerCase()} step`,
         })
+        editStart.current = step
         startEditing(step.id)
       }}
       onChangeStep={(step: Step) =>
@@ -192,12 +234,31 @@ export const CourseBuilder = ({ repository }: CourseBuilderProps) => {
           label: 'Restore step',
         })
       }
+      onRestoreAll={() =>
+        updateCourse(restoreAllSteps, { label: 'Restore all steps' })
+      }
       onEmptyTrash={() =>
-        updateCourse(emptyTrash, { label: 'Empty trash', isPermanent: true })
+        updateCourse(emptyTrash, {
+          label: 'Delete steps forever',
+          isPermanent: true,
+        })
       }
       onUndo={undoChange}
       onRedo={redoChange}
-      onEdit={startEditing}
+      onEdit={(id) => {
+        editStart.current = course.steps.find((step) => step.id === id) ?? null
+        startEditing(id)
+      }}
+      onDiscardEdit={(id) => {
+        const original = editStart.current
+        const current = course.steps.find((step) => step.id === id)
+        startEditing(null)
+        if (!original || original.id !== id || !current) return
+        if (JSON.stringify(original) === JSON.stringify(current)) return
+        updateCourse((course) => updateStep(course, original), {
+          label: 'Discard changes',
+        })
+      }}
       onToggleCollapsed={(id) => {
         keepInView(findStepElement(id))
         if (editingId === id) startEditing(null)

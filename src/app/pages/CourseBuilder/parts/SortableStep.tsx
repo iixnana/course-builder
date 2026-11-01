@@ -7,7 +7,7 @@ import {
   useState,
   type ReactNode,
 } from 'react'
-import { animatePresence } from '../../../utils/presence'
+import { animatePresence } from '../../../../utils/presence'
 import { DragHandle } from './DragHandle'
 
 interface SortableStepProps {
@@ -15,7 +15,6 @@ interface SortableStepProps {
   isDragDisabled: boolean
   isPlaceholder: boolean
   isSettling: boolean
-  isInvalid: boolean
   hasMotion: boolean
   isListMounted: () => boolean
   children: (dragHandle: ReactNode) => ReactNode
@@ -26,7 +25,6 @@ export const SortableStep = ({
   isDragDisabled,
   isPlaceholder,
   isSettling,
-  isInvalid,
   hasMotion,
   isListMounted,
   children,
@@ -56,8 +54,11 @@ export const SortableStep = ({
   useLayoutEffect(() => {
     if (hasEntered.current || !nodeRef.current) return
     hasEntered.current = true
-    if (!shouldEnter) return
-    if (isListMounted()) void animatePresence(nodeRef.current, 'enter')
+    if (!shouldEnter || !isListMounted()) return
+    const element = nodeRef.current
+    queueMicrotask(() => {
+      if (element.isConnected) void animatePresence(element, 'enter')
+    })
   }, [shouldEnter, isListMounted])
 
   return (
@@ -67,7 +68,6 @@ export const SortableStep = ({
       data-step-id={id}
       data-placeholder={isPlaceholder || undefined}
       data-settling-target={isSettling ? id : undefined}
-      data-invalid={isInvalid || undefined}
       style={{
         transform: CSS.Translate.toString(transform),
         transition: hasMotion ? transition : undefined,
