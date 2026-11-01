@@ -1,7 +1,8 @@
 import { useEffect, useRef } from 'react'
-import type { Step } from '../../../../model/course'
+import type { Step } from '../../../../model/step'
 import { animatePresence } from '../../../../utils/presence'
 import { DragHandle } from './DragHandle'
+import { inertStepCardHandlers } from '../StepCard/inertStepCardHandlers'
 import { StepCard } from '../StepCard/StepCard'
 
 interface ExitingStepProps {
@@ -44,11 +45,7 @@ export const ExitingStep = ({
         dragHandle={<DragHandle tabIndex={-1} isDecorative />}
         isCollapsed={isCollapsed}
         isEditing={isEditing}
-        onToggleCollapsed={ignore}
-        onEdit={ignore}
-        onDiscard={ignore}
-        onChange={ignore}
-        onTrash={ignore}
+        {...inertStepCardHandlers}
       />
     </li>
   )

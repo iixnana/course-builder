@@ -13,9 +13,7 @@
   border: none;
   border-radius: var(--radius-full);
   outline: none;
-  transition:
-    background-color 150ms ease,
-    var(--focus-transition);
+  transition: var(--hover-transition), var(--focus-transition);
 
   &::before {
     position: absolute;
@@ -25,7 +23,7 @@
     background: color-mix(in sRGB, currentColor 12%, transparent);
     border-radius: inherit;
     scale: 0;
-    transition: scale 200ms cubic-bezier(0.2, 0, 0, 1);
+    transition: scale var(--motion-duration-snap) var(--motion-easing-out);
   }
 
   & svg {
@@ -50,7 +48,7 @@
 
   &[data-disabled] {
     cursor: not-allowed;
-    opacity: 0.4;
+    opacity: var(--opacity-disabled);
   }
 }
 
@@ -67,12 +65,11 @@
     inset calc(-1 * var(--border-width-sm)) calc(-1 * var(--border-width-lg))
       var(--candy-shade);
 
-  isolation: isolate;
-  transition:
-    background-color 150ms ease,
-    scale 250ms cubic-bezier(0.34, 1.56, 0.64, 1),
-    var(--focus-transition);
   color: var(--color-text);
+  transition:
+    var(--hover-transition),
+    scale var(--motion-duration-snap) var(--motion-easing-bounce),
+    var(--focus-transition);
   background: var(--color-accent);
   border: var(--border-width-sm) solid var(--color-accent-strong);
   box-shadow: var(--candy-shading), var(--shadow-card);
@@ -104,18 +101,6 @@
   &[data-pressed] {
     scale: 0.9;
   }
-}
-
-.tooltip {
-  max-width: 16rem;
-  padding: var(--space-1) var(--space-2);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-semibold);
-  line-height: var(--leading-sm);
-  color: var(--color-gold);
-  background: var(--color-chocolate-950);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-card);
 }
 
 @media (prefers-reduced-motion: reduce) {

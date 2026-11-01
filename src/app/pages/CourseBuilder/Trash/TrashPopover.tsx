@@ -5,14 +5,11 @@ import { Button } from '../../../components/Button/Button'
 import { CandyScroll } from '../../../components/CandyScroll/CandyScroll'
 import { ConfirmDialog } from '../../../components/ConfirmDialog/ConfirmDialog'
 import { IconButton } from '../../../components/IconButton/IconButton'
-import { StepTypeIcon } from '../../../components/StepTypeIcon/StepTypeIcon'
-import {
-  stepSummary,
-  stepTypeLabel,
-  type TrashedStep,
-} from '../../../../model/course'
+import { overlayOffset } from '../../../components/overlayOffset'
+import type { TrashedStep } from '../../../../model/course'
+import { stepSummary, stepTypeLabel } from '../../../../model/step'
+import { StepTypeBadge } from '../StepTypes/StepTypeBadge'
 import '../../../components/Card/Card.css'
-import '../StepCard/StepCard.css'
 import './TrashPopover.css'
 
 interface TrashPopoverProps {
@@ -47,12 +44,7 @@ const TrashPopoverContent = ({
 
   return (
     <>
-      <Heading
-        slot="title"
-        id="trash-title"
-        level={2}
-        className="trash-popover-title"
-      >
+      <Heading slot="title" level={2} className="trash-popover-title">
         Deleted Steps
       </Heading>
       {shownTrash.length === 0 ? (
@@ -64,12 +56,10 @@ const TrashPopoverContent = ({
           <ul className="trash-list" aria-label="Deleted steps">
             {shownTrash.map(({ step }) => (
               <li key={step.id} className="trash-item">
-                <span className="step-type-badge">
-                  <StepTypeIcon type={step.type} className="step-type-icon" />
-                </span>
+                <StepTypeBadge type={step.type} />
                 <span className="trash-item-title">
                   <span className="screen-reader-only">
-                    {stepTypeLabel[step.type]} step:{' '}
+                    {stepTypeLabel(step.type)} step:{' '}
                   </span>
                   {stepSummary(step)}
                 </span>
@@ -115,8 +105,12 @@ const TrashPopoverContent = ({
 }
 
 export const TrashPopover = (props: TrashPopoverProps) => (
-  <Popover className="card trash-popover" placement="bottom end" offset={6}>
-    <Dialog className="trash-popover-dialog" aria-labelledby="trash-title">
+  <Popover
+    className="card trash-popover"
+    placement="bottom end"
+    offset={overlayOffset}
+  >
+    <Dialog className="trash-popover-dialog">
       {({ close }) => <TrashPopoverContent {...props} close={close} />}
     </Dialog>
   </Popover>

@@ -1,0 +1,11 @@
+.tooltip {
+  max-width: 16rem;
+  padding: var(--space-1) var(--space-2);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--leading-sm);
+  color: var(--color-gold);
+  background: var(--color-chocolate-950);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+}

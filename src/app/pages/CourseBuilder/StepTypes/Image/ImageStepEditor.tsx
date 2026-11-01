@@ -1,16 +1,16 @@
 import { ImageIcon, ImageUp } from 'lucide-react'
 import { DialogTrigger } from 'react-aria-components'
-import { Button } from '../../../components/Button/Button'
-import { TextField } from '../../../components/TextField/TextField'
-import type { ImageStep } from '../../../../model/course'
-import { ImagePickerDialog } from '../ImagePicker/ImagePickerDialog'
+import { Button } from '../../../../components/Button/Button'
+import { TextField } from '../../../../components/TextField/TextField'
+import type { ImageStep } from '../../../../../model/steps/image'
+import type { StepEditorProps } from '../StepTypeView'
+import { ImagePickerDialog } from './ImagePicker/ImagePickerDialog'
+import './ImageStep.css'
 
-interface ImageStepEditorProps {
-  step: ImageStep
-  onChange: (step: ImageStep) => void
-}
-
-export const ImageStepEditor = ({ step, onChange }: ImageStepEditorProps) => (
+export const ImageStepEditor = ({
+  step,
+  onChange,
+}: StepEditorProps<ImageStep>) => (
   <>
     <TextField
       label="Title"

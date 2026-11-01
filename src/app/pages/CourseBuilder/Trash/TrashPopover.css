@@ -17,7 +17,7 @@
   background: var(--color-cream);
   border: var(--border-width-sm) solid var(--color-accent-strong);
   border-radius: var(--radius-md);
-  transition: background-color 150ms ease;
+  transition: var(--hover-transition);
 
   &:hover,
   &:has(:focus-visible) {

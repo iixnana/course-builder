@@ -1,4 +1,5 @@
 import { useEffect, useState, type ReactNode } from 'react'
+import { classNames } from '../../../utils/classNames'
 import './HideAway.css'
 
 interface HideAwayProps {
@@ -23,7 +24,7 @@ export const HideAway = ({
 
   return (
     <div
-      className={className ? `hide-away ${className}` : 'hide-away'}
+      className={classNames('hide-away', className)}
       data-axis={axis}
       data-hidden={isHidden || undefined}
       data-settled={isSettled || undefined}

@@ -34,7 +34,7 @@
   &::before {
     position: absolute;
     inset: 0;
-    z-index: 1;
+    z-index: var(--layer-raised);
     pointer-events: none;
     content: '';
     background: var(--gradient-ticket-sheen);
@@ -43,10 +43,6 @@
 }
 
 @media (width >= 48rem) {
-  .golden-ticket-shadow {
-    filter: var(--shadow-card-drop);
-  }
-
   .golden-ticket {
     --zigzag: var(--space-8);
     --ticket-padding-block: var(--space-12);

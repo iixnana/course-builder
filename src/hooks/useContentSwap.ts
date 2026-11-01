@@ -6,6 +6,15 @@ interface ContentSwapOptions {
   isMatchingEntry?: boolean
 }
 
+const outerHeight = (element: HTMLElement) => {
+  const { marginTop, marginBottom } = getComputedStyle(element)
+  return (
+    element.offsetHeight +
+    Number.parseFloat(marginTop) +
+    Number.parseFloat(marginBottom)
+  )
+}
+
 export const useContentSwap = (
   ref: RefObject<HTMLElement | null>,
   trigger: unknown,
@@ -14,17 +23,25 @@ export const useContentSwap = (
   const hasMotion = !usePrefersReducedMotion()
   const lastHeight = useRef(0)
   const lastTrigger = useRef(trigger)
-  const lastScroll = useRef(0)
+  const running = useRef<Animation | null>(null)
 
   useLayoutEffect(() => {
     const element = ref.current
-    if (!element) return
-    const from = lastHeight.current
-    const to = element.offsetHeight
+    const content = element?.firstElementChild
     const hasChanged = !Object.is(lastTrigger.current, trigger)
     lastTrigger.current = trigger
+    if (!element || !(content instanceof HTMLElement)) return
+    if (!hasChanged || !hasMotion) {
+      lastHeight.current = element.offsetHeight
+      return
+    }
+    running.current?.cancel()
+    const from = lastHeight.current
+    element.style.height = `${from}px`
+    const to = outerHeight(content)
     lastHeight.current = to
-    if (!hasChanged || !hasMotion || from === 0 || to === 0 || from === to) {
+    if (from === 0 || to === 0 || from === to) {
+      element.style.removeProperty('height')
       return
     }
     const { easing } = motion()
@@ -35,33 +52,32 @@ export const useContentSwap = (
       { height: `${from}px`, overflow: 'hidden' },
       { height: `${end}px`, overflow: 'hidden' },
     ]
-    const root = document.documentElement
-    const isClamped =
-      window.scrollY < lastScroll.current &&
-      window.scrollY >= root.scrollHeight - window.innerHeight - 1
-    if (isClamped) {
-      element.style.height = `${from}px`
-      window.scrollTo(0, lastScroll.current)
-      element.style.removeProperty('height')
-    }
-    const animation = element.animate(heights(to), { duration, easing })
+    const animation = element.animate(heights(to), {
+      duration,
+      easing,
+      fill: 'forwards',
+    })
+    running.current = animation
 
-    const content = element.firstElementChild
-    if (content instanceof HTMLElement) {
-      const startHeight = content.offsetHeight
-      const retarget = new ResizeObserver(() => {
-        if (animation.effect instanceof KeyframeEffect) {
-          animation.effect.setKeyframes(
-            heights(to + content.offsetHeight - startHeight),
-          )
-        }
-      })
-      retarget.observe(content)
-      const stop = () => retarget.disconnect()
-      animation.addEventListener('finish', stop)
-      animation.addEventListener('cancel', stop)
+    const startHeight = content.offsetHeight
+    const retarget = new ResizeObserver(() => {
+      if (animation.effect instanceof KeyframeEffect) {
+        animation.effect.setKeyframes(
+          heights(to + content.offsetHeight - startHeight),
+        )
+      }
+    })
+    retarget.observe(content)
+    const stop = () => {
+      retarget.disconnect()
+      if (running.current !== animation) return
+      running.current = null
+      element.style.removeProperty('height')
+      animation.cancel()
     }
-    for (const child of element.firstElementChild?.children ?? []) {
+    void animation.finished.then(stop, stop)
+
+    for (const child of content.children) {
       child.animate(
         [
           { opacity: 0, scale: '0.96' },
@@ -86,13 +102,4 @@ export const useContentSwap = (
     observer.observe(element)
     return () => observer.disconnect()
   }, [ref])
-
-  useEffect(() => {
-    const track = () => {
-      lastScroll.current = window.scrollY
-    }
-    track()
-    window.addEventListener('scroll', track, { passive: true })
-    return () => window.removeEventListener('scroll', track)
-  }, [])
 }

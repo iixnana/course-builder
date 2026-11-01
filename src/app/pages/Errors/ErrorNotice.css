@@ -29,10 +29,8 @@
   display: grid;
 
   & h2 {
-    font-family: var(--font-body);
     font-size: var(--font-size-2xl);
-    font-weight: var(--font-weight-bold);
-    line-height: var(--leading-xl);
+    line-height: var(--leading-2xl);
     text-transform: uppercase;
   }
 }

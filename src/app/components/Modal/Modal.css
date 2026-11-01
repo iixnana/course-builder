@@ -1,7 +1,7 @@
 .modal-overlay {
   position: fixed;
   inset: 0;
-  z-index: 100001;
+  z-index: var(--layer-modal);
   display: grid;
   place-items: center;
   padding: var(--page-gutter);
@@ -63,10 +63,16 @@
 }
 
 .modal-actions {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
   gap: var(--space-2);
-  justify-content: end;
+}
+
+@media (width >= 48rem) {
+  .modal-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: end;
+  }
 }
 
 @keyframes modal-fade {

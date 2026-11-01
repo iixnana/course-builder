@@ -8,7 +8,6 @@
   --color-cream-300: #dcc6a4;
   --color-cream: #f5e9d8;
   --color-cherry: #9e1b32;
-  --color-cherry-800: #7a1426;
   --color-gold: #f2c369;
   --color-green-100: #d9ecd2;
   --color-green-700: #357032;
@@ -66,11 +65,6 @@
   );
   --shadow-card: 0 0.5rem 0.5rem var(--shadow-card-color);
   --shadow-card-drop: drop-shadow(0 0.5rem 0.25rem var(--shadow-card-color));
-  --shadow-lifted:
-    0 1.5rem 3rem -0.75rem
-      color-mix(in sRGB, var(--color-chocolate-950) 70%, transparent),
-    0 0.75rem 1.5rem -0.5rem
-      color-mix(in sRGB, var(--color-chocolate-950) 50%, transparent);
   --focus-ring-width: 0.125rem;
   --focus-ring-blur: 0.375rem;
   --focus-ring-color: var(--color-accent-strong);
@@ -79,9 +73,21 @@
     0 0 var(--focus-ring-blur) var(--focus-ring-width)
       color-mix(in sRGB, var(--focus-ring-color) 60%, transparent);
   --motion-duration: 650ms;
+  --motion-duration-quick: 150ms;
+  --motion-duration-snap: 200ms;
   --motion-easing: cubic-bezier(0.4, 0, 0.2, 1);
+  --motion-easing-out: cubic-bezier(0.2, 0, 0, 1);
+  --motion-easing-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
   --burst-pause: 250ms;
-  --focus-transition: box-shadow 200ms cubic-bezier(0.2, 0, 0, 1);
+  --focus-transition: box-shadow var(--motion-duration-snap)
+    var(--motion-easing-out);
+  --hover-transition: background-color var(--motion-duration-quick) ease;
+  --opacity-disabled: 0.4;
+  --opacity-muted: 0.7;
+  --layer-raised: 1;
+  --layer-progress: 10;
+  --layer-drag: 20;
+  --layer-modal: 100001;
 }
 
 @media (prefers-reduced-motion: reduce) {

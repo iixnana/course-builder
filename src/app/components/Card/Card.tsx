@@ -1,4 +1,5 @@
 import type { ComponentPropsWithoutRef, ElementType } from 'react'
+import { classNames } from '../../../utils/classNames'
 import './Card.css'
 
 type CardElement = 'div' | 'section' | 'article' | 'header' | 'li'
@@ -13,7 +14,5 @@ export const Card = <T extends CardElement = 'div'>({
   ...props
 }: CardProps<T>) => {
   const Element = (as ?? 'div') as ElementType
-  return (
-    <Element className={className ? `card ${className}` : 'card'} {...props} />
-  )
+  return <Element className={classNames('card', className)} {...props} />
 }

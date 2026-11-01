@@ -4,12 +4,6 @@
   min-width: 0;
 }
 
-.text-field-label {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-semibold);
-  line-height: var(--leading-sm);
-}
-
 .text-field-input {
   width: 100%;
   min-width: 0;
@@ -26,7 +20,7 @@
 
   &::placeholder {
     color: var(--color-chocolate-800);
-    opacity: 0.7;
+    opacity: var(--opacity-muted);
   }
 
   &[data-focused] {
@@ -44,13 +38,6 @@
       inset 0 0 0 var(--border-width-sm) var(--color-cherry),
       var(--focus-ring);
   }
-}
-
-.text-field-error {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-semibold);
-  line-height: var(--leading-sm);
-  color: var(--color-cherry);
 }
 
 textarea.text-field-input {

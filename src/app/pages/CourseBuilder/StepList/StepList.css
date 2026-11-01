@@ -28,32 +28,13 @@
   }
 }
 
-.step-drag-handle {
-  touch-action: none;
-  cursor: grab;
-
-  &:hover {
-    background: color-mix(in sRGB, currentColor 12%, transparent);
-  }
-
-  &:focus-visible {
-    outline: var(--focus-ring-width) solid transparent;
-    box-shadow: var(--focus-ring);
-  }
-
-  &:disabled {
-    cursor: not-allowed;
-    opacity: 0.3;
-  }
-}
-
 .step-card-floating {
   cursor: grabbing;
-  box-shadow: var(--shadow-lifted);
 }
 
 .drag-lift {
-  animation: drag-lift 200ms cubic-bezier(0.2, 0, 0, 1) forwards;
+  animation: drag-lift var(--motion-duration-snap) var(--motion-easing-out)
+    forwards;
 }
 
 .drag-swing {
@@ -61,10 +42,10 @@
 }
 
 .settling-overlay {
-  position: fixed;
+  position: absolute;
   inset-block-start: 0;
   inset-inline-start: 0;
-  z-index: 20;
+  z-index: var(--layer-drag);
   pointer-events: none;
 }
 

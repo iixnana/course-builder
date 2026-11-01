@@ -1,48 +1,31 @@
-import { useRef } from 'react'
+import { useRef, type RefObject } from 'react'
 import { GoldenTicket } from '../../components/GoldenTicket/GoldenTicket'
 import { HideAway } from '../../components/HideAway/HideAway'
 import { InlineTextField } from '../../components/InlineTextField/InlineTextField'
 import { useGrowIn } from '../../../hooks/useGrowIn'
-import type { Course, Step } from '../../../model/course'
+import type { Course } from '../../../model/course'
+import type { Step } from '../../../model/step'
 import { AddStepPanel } from './AddStep/AddStepPanel'
 import { StepList, type StepListProps } from './StepList/StepList'
-import { StepToolbar } from './StepToolbar/StepToolbar'
 import './CourseBuilder.css'
 
-export interface CourseBuilderViewProps extends Omit<StepListProps, 'steps'> {
+interface CourseBuilderViewProps extends Omit<StepListProps, 'steps'> {
   course: Course
   isRevealed: boolean
-  undoLabel?: string
-  redoLabel?: string
-  isAllCollapsed: boolean
-  onToggleLock: (isLocked: boolean) => void
+  addStepPanelRef: RefObject<HTMLDivElement | null>
   onRenameCourse: (title: string) => void
   onAddStep: (step: Step) => void
-  onUndo: () => void
-  onRedo: () => void
-  onToggleAll: () => void
-  onRestoreStep: (id: string) => void
-  onRestoreAll: () => void
-  onEmptyTrash: () => void
 }
 
 export const CourseBuilderView = ({
   course,
   isRevealed,
-  undoLabel,
-  redoLabel,
-  isAllCollapsed,
-  onToggleLock,
+  addStepPanelRef,
   onRenameCourse,
   onAddStep,
-  onUndo,
-  onRedo,
-  onToggleAll,
-  onRestoreStep,
-  onRestoreAll,
-  onEmptyTrash,
   ...stepListProps
 }: CourseBuilderViewProps) => {
+  const { isLocked } = stepListProps
   const hasSteps = course.steps.length > 0
   const root = useRef<HTMLDivElement>(null)
   useGrowIn(root, isRevealed)
@@ -59,27 +42,10 @@ export const CourseBuilderView = ({
           isWrapping
           placeholder="Name your course"
           value={course.title}
-          isReadOnly={stepListProps.isLocked}
+          isReadOnly={isLocked}
           onChange={onRenameCourse}
         />
       </GoldenTicket>
-
-      <StepToolbar
-        isDisabled={!isRevealed}
-        undoLabel={undoLabel}
-        redoLabel={redoLabel}
-        stepCount={course.steps.length}
-        isAllCollapsed={isAllCollapsed}
-        isLocked={stepListProps.isLocked}
-        trash={course.trash}
-        onUndo={onUndo}
-        onRedo={onRedo}
-        onToggleAll={onToggleAll}
-        onToggleLock={onToggleLock}
-        onRestoreStep={onRestoreStep}
-        onRestoreAll={onRestoreAll}
-        onEmptyTrash={onEmptyTrash}
-      />
 
       <h2 id="course-steps-title" className="screen-reader-only">
         Course steps
@@ -87,14 +53,14 @@ export const CourseBuilderView = ({
 
       <StepList steps={course.steps} {...stepListProps} />
 
-      <HideAway
-        axis="block"
-        isHidden={stepListProps.isLocked}
-        className="course-add-steps"
-      >
-        <AddStepPanel isEmpty={!hasSteps} onAddStep={onAddStep} />
+      <HideAway axis="block" isHidden={isLocked} className="course-add-steps">
+        <AddStepPanel
+          ref={addStepPanelRef}
+          isEmpty={!hasSteps}
+          onAddStep={onAddStep}
+        />
       </HideAway>
-      {stepListProps.isLocked && !hasSteps && (
+      {isLocked && !hasSteps && (
         <p className="course-locked-note">
           Unlock editing to add your first step.
         </p>

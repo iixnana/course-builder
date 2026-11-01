@@ -5,7 +5,7 @@ import { ScrollProgress } from './ScrollProgress'
 import { SiteFooter } from './SiteFooter'
 import { SiteHeader } from './SiteHeader'
 
-export function PageLayout({ children }: PropsWithChildren) {
+export const PageLayout = ({ children }: PropsWithChildren) => {
   const [headerActions, setHeaderActions] = useState<HTMLElement | null>(null)
 
   return (

@@ -32,7 +32,7 @@ import {
   richTextHeadingLevel,
   type TextAlignment,
 } from '../../../utils/richText'
-import { IconToggleButton } from '../IconButton/IconButton'
+import { IconToggleButton } from '../IconButton/IconToggleButton'
 import './RichTextEditor.css'
 
 interface RichTextEditorProps {
@@ -207,7 +207,7 @@ export const RichTextEditor = ({
     <div className="rich-text-editor">
       <span
         id={labelId}
-        className="text-field-label"
+        className="field-label"
         onClick={() => editor.commands.focus()}
       >
         {label}
@@ -221,12 +221,12 @@ export const RichTextEditor = ({
           }
         }}
       >
+        <EditorContent editor={editor} />
         <FormattingToolbar
           editor={editor}
           isEditing={isEditing}
           label={`${label} formatting`}
         />
-        <EditorContent editor={editor} />
       </div>
     </div>
   )

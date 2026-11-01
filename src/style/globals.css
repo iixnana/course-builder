@@ -125,10 +125,19 @@ h3 {
   isolation: isolate;
 }
 
+.field-label,
+.field-error,
 .eyebrow {
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-semibold);
   line-height: var(--leading-sm);
+}
+
+.field-error {
+  color: var(--color-cherry);
+}
+
+.eyebrow {
   text-transform: uppercase;
 }
 
@@ -138,6 +147,11 @@ h3 {
     var(--column-width, var(--content-width))
   );
   margin-inline: auto;
+}
+
+.placeholder-text {
+  font-style: italic;
+  opacity: var(--opacity-muted);
 }
 
 .screen-reader-only {

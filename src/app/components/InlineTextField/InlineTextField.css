@@ -16,13 +16,13 @@
   border: none;
   border-bottom: var(--border-width-sm) dashed transparent;
   outline: none;
-  transition: border-color 150ms ease;
+  transition: border-color var(--motion-duration-quick) ease;
   resize: none;
   field-sizing: content;
 
   &::placeholder {
     color: var(--color-chocolate-800);
-    opacity: 0.75;
+    opacity: var(--opacity-muted);
   }
 
   &[data-hovered] {

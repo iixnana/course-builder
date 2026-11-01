@@ -1,10 +1,8 @@
 import { useEffect, useRef } from 'react'
-import type { Step } from '../../../../model/course'
+import type { Step } from '../../../../model/step'
 import { prefersReducedMotion } from '../../../../hooks/usePrefersReducedMotion'
 import { isTextEntry } from '../../../../utils/isTextEntry'
-import { ImageStepEditor } from './ImageStepEditor'
-import { QuestionStepEditor } from './QuestionStepEditor'
-import { TextStepEditor } from './TextStepEditor'
+import { stepViewOf } from '../StepTypes/stepTypeViews'
 import './StepEditor.css'
 
 interface StepEditorProps {
@@ -16,6 +14,7 @@ const firstFieldSelector = 'input:not([type="file"]), textarea'
 
 export const StepEditor = ({ step, onChange }: StepEditorProps) => {
   const editor = useRef<HTMLDivElement>(null)
+  const { Editor } = stepViewOf(step)
 
   useEffect(() => {
     const element = editor.current
@@ -45,15 +44,7 @@ export const StepEditor = ({ step, onChange }: StepEditorProps) => {
 
   return (
     <div ref={editor} className="step-editor">
-      {step.type === 'text' && (
-        <TextStepEditor step={step} onChange={onChange} />
-      )}
-      {step.type === 'image' && (
-        <ImageStepEditor step={step} onChange={onChange} />
-      )}
-      {step.type === 'multipleChoice' && (
-        <QuestionStepEditor step={step} onChange={onChange} />
-      )}
+      <Editor step={step} onChange={onChange} />
     </div>
   )
 }

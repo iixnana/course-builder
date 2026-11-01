@@ -7,30 +7,25 @@ import {
   useRef,
   useState,
 } from 'react'
-import { prefersReducedMotion } from '../../../../hooks/usePrefersReducedMotion'
-import { animatePresence } from '../../../../utils/presence'
-import { Button } from '../../../components/Button/Button'
-import {
-  IconButton,
-  IconToggleButton,
-} from '../../../components/IconButton/IconButton'
-import { TextField } from '../../../components/TextField/TextField'
+import { prefersReducedMotion } from '../../../../../hooks/usePrefersReducedMotion'
+import { animatePresence } from '../../../../../utils/presence'
+import { Button } from '../../../../components/Button/Button'
+import { IconButton } from '../../../../components/IconButton/IconButton'
+import { IconToggleButton } from '../../../../components/IconButton/IconToggleButton'
+import { TextField } from '../../../../components/TextField/TextField'
 import {
   addOption,
   isCorrectOption,
   setCorrect,
-  placeholderText,
   removeOption,
   setQuestion,
   updateOption,
   type ChoiceOption,
   type MultipleChoiceStep,
-} from '../../../../model/course'
-
-interface QuestionStepEditorProps {
-  step: MultipleChoiceStep
-  onChange: (step: MultipleChoiceStep) => void
-}
+} from '../../../../../model/steps/multipleChoice'
+import type { StepEditorProps } from '../StepTypeView'
+import { optionPlaceholder, questionPlaceholder } from './questionPlaceholders'
+import './QuestionStepEditor.css'
 
 interface AnswerRowProps {
   step: MultipleChoiceStep
@@ -83,7 +78,7 @@ const AnswerRow = ({
       <TextField
         label={`Option ${index + 1}`}
         isLabelHidden
-        placeholder={placeholderText.option(index)}
+        placeholder={optionPlaceholder(index)}
         value={option.text}
         onChange={(text) => onChange(updateOption(step, option.id, text))}
       />
@@ -103,7 +98,7 @@ const AnswerRow = ({
 export const QuestionStepEditor = ({
   step,
   onChange,
-}: QuestionStepEditorProps) => {
+}: StepEditorProps<MultipleChoiceStep>) => {
   const answersId = useId()
   const [leavingIds, setLeavingIds] = useState<ReadonlySet<string>>(new Set())
   const isMounted = useRef(false)
@@ -139,12 +134,12 @@ export const QuestionStepEditor = ({
     <>
       <TextField
         label="Question"
-        placeholder={placeholderText.question}
+        placeholder={questionPlaceholder}
         value={step.question}
         onChange={(question) => onChange(setQuestion(step, question))}
       />
       <div role="group" aria-labelledby={answersId}>
-        <p id={answersId} className="answers-label">
+        <p id={answersId} className="field-label answers-label">
           Options (mark every correct one)
         </p>
         <ul className="answer-list">

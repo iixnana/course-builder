@@ -3,6 +3,7 @@ import {
   useEffect,
   useId,
   useLayoutEffect,
+  useMemo,
   useRef,
   useState,
   type KeyboardEvent,
@@ -10,28 +11,31 @@ import {
 } from 'react'
 import { HideAway } from '../../../components/HideAway/HideAway'
 import { IconButton } from '../../../components/IconButton/IconButton'
-import { StepTypeIcon } from '../../../components/StepTypeIcon/StepTypeIcon'
 import { useContentSwap } from '../../../../hooks/useContentSwap'
 import { usePrefersReducedMotion } from '../../../../hooks/usePrefersReducedMotion'
 import { motion } from '../../../../utils/presence'
 import { keepTabWithin } from '../../../../utils/keepTabWithin'
-import { stepSummary, stepTypeLabel, type Step } from '../../../../model/course'
+import { stepSummary, stepTypeLabel, type Step } from '../../../../model/step'
 import { StepEditor } from '../StepEditor/StepEditor'
-import { StepPreview } from './StepPreview'
+import { StepTypeBadge } from '../StepTypes/StepTypeBadge'
+import { stepViewOf } from '../StepTypes/stepTypeViews'
 import './StepCard.css'
 
-interface StepCardProps {
+export interface StepCardHandlers {
+  onToggleCollapsed: () => void
+  onEdit: (isEditing: boolean) => void
+  onDiscard: () => void
+  onChange: (step: Step) => void
+  onTrash: () => void
+}
+
+interface StepCardProps extends StepCardHandlers {
   step: Step
   dragHandle: ReactNode
   isLocked?: boolean
   isSwiftClose?: boolean
   isCollapsed: boolean
   isEditing: boolean
-  onToggleCollapsed: () => void
-  onEdit: (isEditing: boolean) => void
-  onDiscard: () => void
-  onChange: (step: Step) => void
-  onTrash: () => void
 }
 
 export const StepCard = ({
@@ -48,10 +52,11 @@ export const StepCard = ({
   onTrash,
 }: StepCardProps) => {
   const bodyId = useId()
-  const card = useRef<HTMLDivElement>(null)
+  const editButton = useRef<HTMLButtonElement>(null)
   const bodyClip = useRef<HTMLDivElement>(null)
   const title = useRef<HTMLHeadingElement>(null)
-  const summary = stepSummary(step)
+  const summary = useMemo(() => stepSummary(step), [step])
+  const { Preview } = stepViewOf(step)
 
   const [isTitleCut, setIsTitleCut] = useState(false)
   const repeatsTitle = !(step.type === 'text' && !step.title.trim())
@@ -89,8 +94,7 @@ export const StepCard = ({
 
   useContentSwap(bodyClip, isShowingEditor, { isMatchingEntry: isSwiftClose })
 
-  const focusEditButton = () =>
-    card.current?.querySelector<HTMLElement>('.step-edit-button')?.focus()
+  const focusEditButton = () => editButton.current?.focus()
 
   const finishEditing = () => {
     onEdit(false)
@@ -113,7 +117,6 @@ export const StepCard = ({
 
   return (
     <div
-      ref={card}
       className="step-card-content"
       data-editing={isEditing || undefined}
       onKeyDown={isEditing ? handleEditingKeys : undefined}
@@ -122,12 +125,10 @@ export const StepCard = ({
         <HideAway axis="inline" isHidden={isLocked}>
           {dragHandle}
         </HideAway>
-        <span className="step-type-badge">
-          <StepTypeIcon type={step.type} className="step-type-icon" />
-        </span>
+        <StepTypeBadge type={step.type} />
         <h3 ref={title} className="step-card-title">
           <span className="screen-reader-only">
-            {stepTypeLabel[step.type]} step:{' '}
+            {stepTypeLabel(step.type)} step:{' '}
           </span>
           {summary}
         </h3>
@@ -156,6 +157,7 @@ export const StepCard = ({
             className="step-card-edit-actions"
           >
             <IconButton
+              ref={editButton}
               label={isEditing ? 'Save' : 'Edit'}
               className="step-edit-button"
               onPress={isEditing ? finishEditing : () => onEdit(true)}
@@ -196,7 +198,7 @@ export const StepCard = ({
                     </p>
                   </HideAway>
                 )}
-                <StepPreview step={step} />
+                <Preview step={step} />
               </div>
             )}
           </div>
