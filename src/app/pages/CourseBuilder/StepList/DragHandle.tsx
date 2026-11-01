@@ -14,7 +14,7 @@ interface DragHandleProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   onMove?: (direction: MoveDirection) => void
 }
 
-const label = 'Drag or Use Arrow Keys to Reorder'
+const label = 'Drag to Reorder'
 
 const directionOf = (key: string): MoveDirection | null =>
   key === 'ArrowUp' ? -1 : key === 'ArrowDown' ? 1 : null
