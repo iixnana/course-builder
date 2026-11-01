@@ -12,7 +12,7 @@
   width: min(100%, var(--content-width));
   max-height: calc(100dvh - 2 * var(--page-gutter));
   overflow-y: auto;
-  color: var(--color-chocolate-900);
+  color: var(--color-text);
   background: var(--color-surface);
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-card);

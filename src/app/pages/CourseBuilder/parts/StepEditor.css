@@ -33,7 +33,18 @@
 }
 
 .answers-label {
+  margin-block-end: var(--space-2);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-semibold);
   line-height: var(--leading-sm);
+}
+
+.icon-button.answer-correct-toggle[data-selected] {
+  color: var(--color-cream);
+  background: var(--color-green-700);
+}
+
+.answer-row[data-correct] .text-field-input {
+  background: var(--color-green-100);
+  border-color: var(--color-green-700);
 }

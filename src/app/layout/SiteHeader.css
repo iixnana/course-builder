@@ -1,20 +1,23 @@
 .site-header {
   --header-color: var(--color-chocolate-950);
-  --wave-length: var(--space-16);
-  --wave-height: var(--space-4);
   --logo-height: var(--space-12);
 
-  color: var(--color-cream);
+  overflow-x: clip;
+  padding-block-end: var(--space-12);
 }
 
 .site-header-bar {
+  position: relative;
   padding-block: var(--space-6) var(--space-2);
+  color: var(--header-color);
   background-color: var(--header-color);
 }
 
 .site-header-inner {
   --column-width: var(--page-width);
 
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-4);
@@ -33,18 +36,11 @@
   font-size: var(--font-size-xl);
   font-weight: var(--font-weight-regular);
   line-height: var(--leading-xl);
-}
-
-.site-header-wave {
-  height: var(--wave-height);
-  background-color: var(--header-color);
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 40' preserveAspectRatio='none'%3E%3Cpath d='M0 0H80V20Q60 40 40 20T0 20Z'/%3E%3C/svg%3E")
-    repeat-x 0 0 / var(--wave-length) 100%;
+  letter-spacing: 0.1em;
 }
 
 @media (width >= 48rem) {
   .site-header {
-    --wave-height: var(--space-6);
     --logo-height: var(--space-16);
   }
 

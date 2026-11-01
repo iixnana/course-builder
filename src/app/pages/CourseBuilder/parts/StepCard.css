@@ -1,6 +1,8 @@
 .step-card-content {
+  --collapse-duration: var(--motion-duration);
+  --collapse-easing: var(--motion-easing);
+
   display: grid;
-  gap: var(--space-4);
 }
 
 .step-card-header {
@@ -18,10 +20,34 @@
   }
 }
 
-.step-type-icon {
+.step-type-badge {
+  display: inline-grid;
+  margin-inline-end: var(--space-1);
   flex-shrink: 0;
+  place-items: center;
+  width: var(--space-8);
+  height: var(--space-8);
+  background: color-mix(in sRGB, var(--color-accent) 25%, transparent);
+  border-radius: var(--radius-md);
+}
+
+.step-type-icon {
   width: var(--icon-size);
   height: var(--icon-size);
+}
+
+.icon-button.step-edit-button {
+  [data-editing] & {
+    color: var(--color-cream);
+    background: var(--color-accent-strong);
+  }
+}
+
+.icon-button.step-delete-button {
+  &[data-hovered],
+  &[data-pressed] {
+    color: var(--color-cherry);
+  }
 }
 
 .step-warning-icon {
@@ -45,19 +71,53 @@
 }
 
 .step-collapse-button svg {
-  transition: transform 150ms ease;
+  transition: transform var(--collapse-duration) var(--collapse-easing);
 }
 
-.step-collapse-button[aria-expanded='false'] svg {
-  transform: rotate(-90deg);
+.step-collapse-button[aria-expanded='true'] svg {
+  transform: rotate(180deg);
 }
 
 .step-card-body {
   display: grid;
-  gap: var(--space-4);
+  grid-template-rows: 1fr;
+  transition: grid-template-rows var(--collapse-duration) var(--collapse-easing);
 
-  &[hidden] {
-    display: none;
+  &[data-collapsed] {
+    grid-template-rows: 0fr;
+  }
+}
+
+.step-card-body-clip {
+  min-height: 0;
+  overflow: visible;
+  transition: overflow 0s var(--collapse-duration) allow-discrete;
+
+  [data-collapsed] > & {
+    overflow: hidden;
+    transition: overflow 0s allow-discrete;
+  }
+}
+
+.step-card-body-content {
+  --content-fade: calc(var(--collapse-duration) * 0.6);
+  --content-delay: calc(var(--collapse-duration) * 0.4);
+
+  display: grid;
+  gap: var(--space-4);
+  margin-block-start: var(--space-4);
+  padding-block-start: var(--space-4);
+  border-block-start: var(--border-width-sm) dashed var(--color-accent);
+  transition:
+    opacity var(--content-fade) var(--collapse-easing) var(--content-delay),
+    scale var(--content-fade) var(--collapse-easing) var(--content-delay);
+
+  [data-collapsed] > .step-card-body-clip > & {
+    opacity: 0;
+    scale: 0.96;
+    transition:
+      opacity var(--content-delay) var(--collapse-easing),
+      scale var(--content-delay) var(--collapse-easing);
   }
 }
 
@@ -93,7 +153,11 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .step-collapse-button svg {
+  .step-collapse-button svg,
+  .step-card-body,
+  .step-card-body-clip,
+  .step-card-body-content,
+  [data-collapsed] > .step-card-body-clip > .step-card-body-content {
     transition: none;
   }
 }

@@ -1,13 +1,12 @@
 .card {
   --card-padding: var(--space-6);
-  --card-surface: var(--color-surface);
-  --card-border-pattern: var(--pattern-wonka-stripes);
-  --stripe-size: 2.5rem;
+  --card-border-pattern: var(--pattern-candy-stripes);
+  --stripe-size: 1rem;
 
   padding: var(--card-padding);
-  color: var(--color-chocolate-900);
+  color: var(--color-text);
   background:
-    linear-gradient(var(--card-surface), var(--card-surface)) padding-box,
+    linear-gradient(var(--color-surface), var(--color-surface)) padding-box,
     var(--card-border-pattern) 0 / var(--stripe-size) var(--stripe-size)
       border-box;
   border: var(--border-width-xl) solid transparent;

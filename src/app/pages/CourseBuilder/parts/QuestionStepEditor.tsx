@@ -32,7 +32,6 @@ export const QuestionStepEditor = ({
     <>
       <TextField
         label="Question"
-        autoFocus
         placeholder="What should the trainee answer?"
         value={step.question}
         onChange={(question) => onChange(setQuestion(step, question))}
@@ -43,9 +42,14 @@ export const QuestionStepEditor = ({
         </p>
         <ul className="answer-list">
           {step.options.map((option, index) => (
-            <li key={option.id} className="answer-row">
+            <li
+              key={option.id}
+              className="answer-row"
+              data-correct={option.id === step.correctOptionId || undefined}
+            >
               <IconToggleButton
                 label={`Answer ${index + 1} is correct`}
+                className="answer-correct-toggle"
                 isSelected={option.id === step.correctOptionId}
                 onChange={(isSelected) => {
                   if (isSelected) onChange(markCorrect(step, option.id))

@@ -5,7 +5,27 @@
   grid-template-rows: 1fr auto 1fr;
   justify-items: center;
   font-weight: var(--font-weight-semibold);
-  color: var(--color-cream);
+  color: var(--color-text);
+  animation: blueberry-loader-in var(--loader-fade, 300ms) ease-out
+    var(--loader-appear-delay) backwards;
+
+  &[data-leaving] {
+    pointer-events: none;
+    animation: blueberry-loader-out var(--motion-duration) var(--motion-easing)
+      forwards;
+  }
+}
+
+@keyframes blueberry-loader-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes blueberry-loader-out {
+  to {
+    opacity: 0;
+  }
 }
 
 .blueberry-stage {
@@ -44,17 +64,16 @@
 
 .loader-track {
   width: 12rem;
-  height: var(--space-6);
+  height: var(--space-4);
   overflow: hidden;
-  background-color: var(--color-chocolate-900);
-  border: var(--border-width-lg) solid var(--color-cream);
+  background-color: var(--color-cream-300);
   border-radius: var(--radius-full);
 }
 
 .loader-fill {
   width: 40%;
   height: 100%;
-  background-color: var(--color-blueberry-300);
+  background-color: var(--color-blueberry-500);
   border-radius: inherit;
   animation: loader-slide 1.4s ease-in-out infinite;
 }
@@ -92,6 +111,14 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .blueberry-loader {
+    --loader-fade: 0s;
+
+    &[data-leaving] {
+      animation-duration: 0s;
+    }
+  }
+
   .blueberry-inflating {
     transform: scale(1.4);
     animation: none;

@@ -1,6 +1,13 @@
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import type { ReactNode } from 'react'
+import {
+  useCallback,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type ReactNode,
+} from 'react'
+import { animatePresence } from '../../../utils/presence'
 import { DragHandle } from './DragHandle'
 
 interface SortableStepProps {
@@ -10,6 +17,7 @@ interface SortableStepProps {
   isSettling: boolean
   isInvalid: boolean
   hasMotion: boolean
+  isListMounted: () => boolean
   children: (dragHandle: ReactNode) => ReactNode
 }
 
@@ -20,8 +28,11 @@ export const SortableStep = ({
   isSettling,
   isInvalid,
   hasMotion,
+  isListMounted,
   children,
 }: SortableStepProps) => {
+  const nodeRef = useRef<HTMLLIElement | null>(null)
+
   const {
     attributes,
     listeners,
@@ -31,10 +42,29 @@ export const SortableStep = ({
     transition,
   } = useSortable({ id, disabled: isDragDisabled })
 
+  const ref = useCallback(
+    (element: HTMLLIElement | null) => {
+      nodeRef.current = element
+      setNodeRef(element)
+    },
+    [setNodeRef],
+  )
+
+  const [shouldEnter] = useState(hasMotion)
+  const hasEntered = useRef(false)
+
+  useLayoutEffect(() => {
+    if (hasEntered.current || !nodeRef.current) return
+    hasEntered.current = true
+    if (!shouldEnter) return
+    if (isListMounted()) void animatePresence(nodeRef.current, 'enter')
+  }, [shouldEnter, isListMounted])
+
   return (
     <li
-      ref={setNodeRef}
+      ref={ref}
       className="card step-card"
+      data-step-id={id}
       data-placeholder={isPlaceholder || undefined}
       data-settling-target={isSettling ? id : undefined}
       data-invalid={isInvalid || undefined}

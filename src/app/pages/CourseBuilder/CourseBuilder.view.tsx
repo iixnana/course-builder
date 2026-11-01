@@ -1,5 +1,7 @@
+import { useRef } from 'react'
 import { GoldenTicket } from '../../components/GoldenTicket/GoldenTicket'
 import { InlineTextField } from '../../components/InlineTextField/InlineTextField'
+import { useGrowIn } from '../../hooks/useGrowIn'
 import { stepIssues, type Course, type StepType } from '../../model/course'
 import { AddStepPanel } from './parts/AddStepPanel'
 import { StepList, type StepListProps } from './parts/StepList'
@@ -8,6 +10,7 @@ import './CourseBuilder.css'
 
 export interface CourseBuilderViewProps extends Omit<StepListProps, 'steps'> {
   course: Course
+  isRevealed: boolean
   undoLabel?: string
   redoLabel?: string
   isAllCollapsed: boolean
@@ -22,6 +25,7 @@ export interface CourseBuilderViewProps extends Omit<StepListProps, 'steps'> {
 
 export const CourseBuilderView = ({
   course,
+  isRevealed,
   undoLabel,
   redoLabel,
   isAllCollapsed,
@@ -35,9 +39,15 @@ export const CourseBuilderView = ({
   ...stepListProps
 }: CourseBuilderViewProps) => {
   const hasSteps = course.steps.length > 0
+  const root = useRef<HTMLDivElement>(null)
+  useGrowIn(root, isRevealed)
 
   return (
-    <div className="course-builder">
+    <div
+      ref={root}
+      className="course-builder"
+      data-revealed={isRevealed || undefined}
+    >
       <GoldenTicket className="course-details">
         <InlineTextField
           label="Course name"
@@ -64,7 +74,7 @@ export const CourseBuilderView = ({
         onEmptyTrash={onEmptyTrash}
       />
 
-      {hasSteps && <StepList steps={course.steps} {...stepListProps} />}
+      <StepList steps={course.steps} {...stepListProps} />
 
       <AddStepPanel
         message={

@@ -1,3 +1,7 @@
+.golden-ticket-shadow {
+  filter: var(--shadow-card-drop);
+}
+
 .golden-ticket {
   --zigzag: var(--space-6);
   --ticket-padding-block: var(--space-8);
@@ -39,6 +43,10 @@
 }
 
 @media (width >= 48rem) {
+  .golden-ticket-shadow {
+    filter: var(--shadow-card-drop);
+  }
+
   .golden-ticket {
     --zigzag: var(--space-8);
     --ticket-padding-block: var(--space-12);

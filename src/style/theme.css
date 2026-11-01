@@ -2,12 +2,18 @@
   --color-chocolate-950: #2a150b;
   --color-chocolate-900: #3b1f12;
   --color-chocolate-800: #4d2816;
+  --color-text: #4a2a1a;
+  --color-cream-100: #f1e4d1;
+  --color-cream-200: #ecdcc6;
+  --color-cream-300: #dcc6a4;
   --color-cream: #f5e9d8;
   --color-cherry: #9e1b32;
   --color-cherry-800: #7a1426;
   --color-warning-400: #ef6f7c;
   --color-warning-500: #d9465a;
   --color-gold: #f2c369;
+  --color-green-100: #d9ecd2;
+  --color-green-700: #357032;
   --color-ticket-gold: #dbad4b;
   --color-ticket-ink: #2e2205;
   --color-ticket-shine: rgb(248 255 151 / 70%);
@@ -15,18 +21,22 @@
   --color-blueberry-300: #89a2ca;
   --color-blueberry-500: #6081b8;
   --color-blueberry-900: #3e4d64;
-  --color-surface: #e8d5b9;
-  --color-orange-500: #e8782a;
-  --color-orange-400: #f39a55;
+  --color-caramel-300: #e0ab74;
+  --color-caramel-400: #d0924f;
+  --color-caramel-600: #a5622a;
+  --color-accent-soft: var(--color-caramel-300);
+  --color-accent: var(--color-caramel-400);
+  --color-accent-strong: var(--color-caramel-600);
+  --color-surface: #f3e6d4;
+  --pattern-candy-stripes: repeating-linear-gradient(
+    -45deg,
+    var(--color-accent) 0 25%,
+    var(--color-accent-soft) 0 50%
+  );
   --pattern-warning-stripes: repeating-linear-gradient(
     -45deg,
-    var(--color-warning-400) 0 12.5%,
-    var(--color-warning-500) 0 25%
-  );
-  --pattern-wonka-stripes: repeating-linear-gradient(
-    -45deg,
-    var(--color-orange-400) 0 12.5%,
-    var(--color-orange-500) 0 25%
+    var(--color-warning-500) 0 25%,
+    var(--color-warning-400) 0 50%
   );
   --gradient-ticket-sheen: linear-gradient(
     -250deg,
@@ -39,21 +49,40 @@
     transparent 80%
   );
   --radius-md: 0.5rem;
-  --radius-xl: 2rem;
+  --radius-xl: 1.5rem;
   --radius-full: 999rem;
   --border-width-sm: 0.125rem;
   --border-width-lg: 0.25rem;
   --border-width-xl: 0.5rem;
   --outline-dashed: var(--border-width-xl) dashed
-    color-mix(in sRGB, var(--color-cream) 60%, transparent);
-  --shadow-card: 0 0.5rem 1rem
-    color-mix(in sRGB, var(--color-chocolate-900) 20%, transparent);
+    color-mix(in sRGB, var(--color-chocolate-900) 30%, transparent);
+  --shadow-card-color: color-mix(
+    in sRGB,
+    var(--color-chocolate-900) 14%,
+    transparent
+  );
+  --shadow-card: 0 0.5rem 0.5rem var(--shadow-card-color);
+  --shadow-card-drop: drop-shadow(0 0.5rem 0.25rem var(--shadow-card-color));
   --shadow-lifted:
     0 1.5rem 3rem -0.75rem
       color-mix(in sRGB, var(--color-chocolate-950) 70%, transparent),
     0 0.75rem 1.5rem -0.5rem
       color-mix(in sRGB, var(--color-chocolate-950) 50%, transparent);
   --focus-ring-width: 0.125rem;
-  --focus-ring-offset: 0.125rem;
+  --focus-ring-blur: 0.375rem;
+  --focus-ring-color: var(--color-accent-strong);
+  --focus-ring:
+    0 0 0 var(--focus-ring-width) var(--focus-ring-color),
+    0 0 var(--focus-ring-blur) var(--focus-ring-width)
+      color-mix(in sRGB, var(--focus-ring-color) 60%, transparent);
   --press-offset: 0.0625rem;
+  --motion-duration: 650ms;
+  --motion-easing: cubic-bezier(0.4, 0, 0.2, 1);
+  --focus-transition: box-shadow 200ms cubic-bezier(0.2, 0, 0, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --focus-transition: box-shadow 0s;
+  }
 }

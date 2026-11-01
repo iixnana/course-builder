@@ -7,6 +7,7 @@ import {
   TooltipTrigger,
   type ButtonProps,
   type ToggleButtonProps,
+  type TooltipTriggerComponentProps,
 } from 'react-aria-components'
 import './IconButton.css'
 
@@ -24,13 +25,27 @@ type IconToggleButtonProps = IconButtonLabel &
 const withIconButtonClass = (className?: string) =>
   className ? `icon-button ${className}` : 'icon-button'
 
+const tooltipOffset = 6
+
+export const IconTooltipTrigger = (props: TooltipTriggerComponentProps) => (
+  <TooltipTrigger delay={600} closeDelay={0} {...props} />
+)
+
+export const IconButtonTooltip = ({
+  label,
+}: Pick<IconButtonLabel, 'label'>) => (
+  <Tooltip className="tooltip" placement="bottom" offset={tooltipOffset}>
+    {label}
+  </Tooltip>
+)
+
 export const IconButton = ({
   label,
   children,
   className,
   ...props
 }: IconButtonProps) => (
-  <TooltipTrigger delay={600}>
+  <IconTooltipTrigger>
     <Button
       {...props}
       aria-label={label}
@@ -38,8 +53,8 @@ export const IconButton = ({
     >
       {children}
     </Button>
-    <Tooltip className="tooltip">{label}</Tooltip>
-  </TooltipTrigger>
+    <IconButtonTooltip label={label} />
+  </IconTooltipTrigger>
 )
 
 export const IconToggleButton = ({
@@ -48,7 +63,7 @@ export const IconToggleButton = ({
   className,
   ...props
 }: IconToggleButtonProps) => (
-  <TooltipTrigger delay={600}>
+  <IconTooltipTrigger>
     <ToggleButton
       {...props}
       aria-label={label}
@@ -56,6 +71,6 @@ export const IconToggleButton = ({
     >
       {children}
     </ToggleButton>
-    <Tooltip className="tooltip">{label}</Tooltip>
-  </TooltipTrigger>
+    <IconButtonTooltip label={label} />
+  </IconTooltipTrigger>
 )
