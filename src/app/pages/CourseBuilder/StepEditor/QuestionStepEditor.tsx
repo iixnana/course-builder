@@ -71,7 +71,7 @@ const AnswerRow = ({
       data-correct={isCorrectOption(step, option.id) || undefined}
     >
       <IconToggleButton
-        label={`Mark Answer ${index + 1} as Correct`}
+        label={`Mark Option ${index + 1} as Correct`}
         className="answer-correct-toggle"
         isSelected={isCorrectOption(step, option.id)}
         onChange={(isSelected) =>
@@ -81,14 +81,14 @@ const AnswerRow = ({
         <CircleCheck />
       </IconToggleButton>
       <TextField
-        label={`Answer ${index + 1}`}
+        label={`Option ${index + 1}`}
         isLabelHidden
         placeholder={placeholderText.option(index)}
         value={option.text}
         onChange={(text) => onChange(updateOption(step, option.id, text))}
       />
       <IconButton
-        label={`Remove Answer ${index + 1}`}
+        label="Delete"
         isDisabled={!canRemove}
         onPress={() => {
           if (row.current) onRemove(option.id, row.current)
@@ -145,7 +145,7 @@ export const QuestionStepEditor = ({
       />
       <div role="group" aria-labelledby={answersId}>
         <p id={answersId} className="answers-label">
-          Answers (mark every correct one)
+          Options (mark every correct one)
         </p>
         <ul className="answer-list">
           {step.options.map((option, index) => (
@@ -162,9 +162,12 @@ export const QuestionStepEditor = ({
           ))}
         </ul>
       </div>
-      <Button variant="secondary" onPress={() => onChange(addOption(step))}>
+      <Button
+        className="add-answer-button"
+        onPress={() => onChange(addOption(step))}
+      >
         <Plus aria-hidden="true" />
-        Add Answer
+        Add Option
       </Button>
     </>
   )

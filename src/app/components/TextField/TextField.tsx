@@ -1,5 +1,6 @@
 import {
   composeRenderProps,
+  FieldError,
   Input,
   Label,
   TextArea,
@@ -13,6 +14,7 @@ interface TextFieldProps extends AriaTextFieldProps {
   isLabelHidden?: boolean
   isMultiline?: boolean
   placeholder?: string
+  errorMessage?: string | null
 }
 
 export const TextField = ({
@@ -20,10 +22,12 @@ export const TextField = ({
   isLabelHidden = false,
   isMultiline = false,
   placeholder,
+  errorMessage,
   className,
   ...props
 }: TextFieldProps) => (
   <AriaTextField
+    isInvalid={Boolean(errorMessage)}
     {...props}
     className={composeRenderProps(className, (className) =>
       className ? `text-field ${className}` : 'text-field',
@@ -39,5 +43,6 @@ export const TextField = ({
     ) : (
       <Input className="text-field-input" placeholder={placeholder} />
     )}
+    <FieldError className="text-field-error">{errorMessage}</FieldError>
   </AriaTextField>
 )

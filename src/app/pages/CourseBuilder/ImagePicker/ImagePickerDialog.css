@@ -78,6 +78,7 @@
 }
 
 .image-drop-zone {
+  position: relative;
   display: grid;
   gap: var(--space-2);
   place-content: center;
@@ -137,10 +138,6 @@
   display: grid;
   gap: var(--space-4);
 
-  & .image-picker-hint {
-    min-height: calc(2 * var(--leading-sm));
-  }
-
   & .button {
     justify-self: end;
     width: auto;
@@ -148,12 +145,14 @@
 }
 
 .image-link-preview {
+  --preview-height: min(16rem, 28dvh);
+
+  position: relative;
   display: grid;
   grid-template: minmax(0, 1fr) / minmax(0, 1fr);
   place-items: center;
-  height: 16rem;
+  height: var(--preview-height);
   overflow: hidden;
-  background: var(--color-cream);
   border-radius: var(--radius-md);
 
   & img {
@@ -166,6 +165,10 @@
   &[data-status='broken'] img {
     visibility: hidden;
   }
+}
+
+.image-link-form:has(.text-field-error) .image-link-preview {
+  height: calc(var(--preview-height) - var(--leading-sm) - var(--label-gap));
 }
 
 @media (pointer: coarse) {

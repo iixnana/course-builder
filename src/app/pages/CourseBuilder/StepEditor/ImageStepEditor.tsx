@@ -3,7 +3,7 @@ import { DialogTrigger } from 'react-aria-components'
 import { Button } from '../../../components/Button/Button'
 import { TextField } from '../../../components/TextField/TextField'
 import type { ImageStep } from '../../../../model/course'
-import { ImagePickerDialog } from './ImagePickerDialog'
+import { ImagePickerDialog } from '../ImagePicker/ImagePickerDialog'
 
 interface ImageStepEditorProps {
   step: ImageStep
@@ -27,7 +27,7 @@ export const ImageStepEditor = ({ step, onChange }: ImageStepEditorProps) => (
       </div>
     )}
     <DialogTrigger>
-      <Button variant="secondary">
+      <Button variant="secondary" className="image-replace-button">
         <ImageUp aria-hidden="true" />
         {step.url ? 'Replace Image' : 'Add Image'}
       </Button>

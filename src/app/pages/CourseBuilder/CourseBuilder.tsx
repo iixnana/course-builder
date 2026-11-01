@@ -32,7 +32,7 @@ import {
 import { demoResetEvent } from '../../layout/demoReset'
 import { demoCourse } from '../../../data/demoCourse'
 import { CourseBuilderView } from './CourseBuilder.view'
-import { StepToolbar } from './parts/StepToolbar'
+import { StepToolbar } from './StepToolbar/StepToolbar'
 
 interface CourseBuilderProps {
   repository: CourseRepository
@@ -59,6 +59,7 @@ export const CourseBuilder = ({ repository }: CourseBuilderProps) => {
   const [isRevealed, setIsRevealed] = useState(false)
   const [isLoaderLeaving, setIsLoaderLeaving] = useState(false)
   const [isLocked, setIsLocked] = useState(false)
+  const [swiftCloseId, setSwiftCloseId] = useState<string | null>(null)
   const mountedAt = useRef(0)
   const loadedCourse =
     loadState.status === 'ready' ? loadState.history.present.state : null
@@ -97,6 +98,7 @@ export const CourseBuilder = ({ repository }: CourseBuilderProps) => {
   }, [loadedCourse, isRevealed, isLoaderLeaving])
 
   const startEditing = useCallback((id: string | null) => {
+    setSwiftCloseId(null)
     editSession.current += 1
     setEditingId(id)
     if (id) {
@@ -194,6 +196,7 @@ export const CourseBuilder = ({ repository }: CourseBuilderProps) => {
       redoLabel={redoLabel(history)}
       isAllCollapsed={isAllCollapsed}
       isLocked={isLocked}
+      swiftCloseId={swiftCloseId}
       onToggleLock={(shouldLock) => {
         if (shouldLock) startEditing(null)
         setIsLocked(shouldLock)
@@ -205,12 +208,13 @@ export const CourseBuilder = ({ repository }: CourseBuilderProps) => {
         })
       }
       onAddStep={(step: Step) => {
-        keepInView(findAddStepPanel())
+        keepInView(findAddStepPanel(), { onlyDown: true })
         updateCourse((course) => addStep(course, step), {
           label: `Add ${stepTypeLabel[step.type].toLowerCase()} step`,
         })
         editStart.current = step
         startEditing(step.id)
+        setSwiftCloseId(activeEditingId)
       }}
       onChangeStep={(step: Step) =>
         updateCourse((course) => updateStep(course, step), {

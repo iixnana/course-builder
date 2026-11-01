@@ -6,7 +6,11 @@ import {
   SquareCheck,
 } from 'lucide-react'
 import { RichText } from '../../../components/RichTextEditor/RichText'
-import { isCorrectOption, type Step } from '../../../../model/course'
+import {
+  isCorrectOption,
+  placeholderText,
+  type Step,
+} from '../../../../model/course'
 import { richTextToPlainText } from '../../../../utils/richText'
 import './StepPreview.css'
 
@@ -48,11 +52,11 @@ export const StepPreview = ({ step }: StepPreviewProps) => {
           className="step-options"
           aria-label={
             hasSeveral
-              ? `Answers, ${step.correctOptionIds.length} correct`
-              : 'Answers'
+              ? `Options, ${step.correctOptionIds.length} correct`
+              : 'Options'
           }
         >
-          {step.options.map((option) => {
+          {step.options.map((option, index) => {
             const isCorrect = isCorrectOption(step, option.id)
             return (
               <li
@@ -68,10 +72,12 @@ export const StepPreview = ({ step }: StepPreviewProps) => {
                 {option.text ? (
                   <span>{option.text}</span>
                 ) : (
-                  <span className="step-empty">Write this answer</span>
+                  <span className="step-empty">
+                    {placeholderText.option(index)}
+                  </span>
                 )}
                 {isCorrect && (
-                  <span className="screen-reader-only">(correct answer)</span>
+                  <span className="screen-reader-only">(correct)</span>
                 )}
               </li>
             )

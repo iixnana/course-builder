@@ -1,6 +1,6 @@
 .site-header {
   --header-color: var(--color-chocolate-950);
-  --logo-height: var(--space-12);
+  --logo-height: var(--space-8);
 
   overflow-x: clip;
   padding-block-end: var(--space-12);
@@ -19,9 +19,9 @@
   position: relative;
   z-index: 1;
   display: flex;
-  gap: var(--space-4);
+  flex-direction: column;
+  gap: var(--space-2);
   align-items: center;
-  justify-content: space-between;
 }
 
 .site-header-brand {
@@ -29,7 +29,9 @@
   flex-wrap: wrap;
   gap: var(--space-2) var(--space-4);
   align-items: center;
+  justify-content: center;
   min-width: 0;
+  text-align: center;
 }
 
 .site-header-actions {
@@ -77,15 +79,27 @@
 .site-header-title {
   color: var(--color-gold);
   font-family: var(--font-brand);
-  font-size: var(--font-size-xl);
+  font-size: var(--font-size-lg);
   font-weight: var(--font-weight-regular);
-  line-height: var(--leading-xl);
+  line-height: var(--leading-lg);
   letter-spacing: 0.1em;
 }
 
 @media (width >= 48rem) {
   .site-header {
     --logo-height: var(--space-16);
+  }
+
+  .site-header-brand {
+    justify-content: start;
+    text-align: start;
+  }
+
+  .site-header-inner {
+    flex-direction: row;
+    gap: var(--space-4);
+    align-items: center;
+    justify-content: space-between;
   }
 
   .site-header-title {

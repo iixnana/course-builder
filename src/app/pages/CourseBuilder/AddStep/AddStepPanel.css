@@ -1,0 +1,28 @@
+.add-step-panel {
+  display: grid;
+  justify-items: center;
+  padding: var(--space-6);
+  color: var(--color-text);
+  text-align: center;
+  border: var(--outline-dashed);
+  border-radius: var(--radius-xl);
+}
+
+.add-step-message {
+  padding-block-end: var(--space-4);
+  font-weight: var(--font-weight-semibold);
+}
+
+.add-step-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  justify-content: center;
+}
+
+.add-step-button {
+  --icon-size: 1.75rem;
+
+  width: var(--space-16);
+  height: var(--space-16);
+}

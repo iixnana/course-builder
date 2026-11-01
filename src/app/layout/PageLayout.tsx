@@ -1,5 +1,5 @@
 import { useState, type PropsWithChildren } from 'react'
-import { HeaderActionsContext } from './headerActionsContext'
+import { HeaderActionsContext } from '../../context/headerActionsContext'
 import './PageLayout.css'
 import { ScrollProgress } from './ScrollProgress'
 import { SiteFooter } from './SiteFooter'

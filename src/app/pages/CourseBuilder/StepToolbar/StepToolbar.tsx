@@ -13,7 +13,7 @@ import {
   IconToggleButton,
 } from '../../../components/IconButton/IconButton'
 import type { TrashedStep } from '../../../../model/course'
-import { TrashPopover } from './TrashPopover'
+import { TrashPopover } from '../Trash/TrashPopover'
 import { HeaderActions } from '../../../layout/HeaderActions'
 import './StepToolbar.css'
 
@@ -51,7 +51,7 @@ export const StepToolbar = ({
   onEmptyTrash,
 }: StepToolbarProps) => (
   <HeaderActions>
-    <div role="group" aria-label="Step actions" className="step-toolbar">
+    <div role="group" aria-label="Course actions" className="step-toolbar">
       <IconToggleButton
         label="Lock Editing"
         className="step-toolbar-lock"

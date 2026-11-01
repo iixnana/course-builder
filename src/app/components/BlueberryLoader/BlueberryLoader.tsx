@@ -6,12 +6,14 @@ import './BlueberryLoader.css'
 
 interface BlueberryLoaderProps {
   label?: string
+  isInline?: boolean
   isLeaving?: boolean
   onLeft?: () => void
 }
 
 export const BlueberryLoader = ({
   label = 'Loading',
+  isInline,
   isLeaving,
   onLeft,
 }: BlueberryLoaderProps) => {
@@ -22,6 +24,7 @@ export const BlueberryLoader = ({
   return (
     <div
       className="blueberry-loader"
+      data-inline={isInline || undefined}
       data-leaving={isLeaving || undefined}
       style={
         { '--loader-appear-delay': `${loaderAppearDelayMs}ms` } as CSSProperties

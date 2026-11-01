@@ -1,6 +1,6 @@
 .inline-text-field {
   display: grid;
-  gap: var(--space-1);
+  gap: var(--label-gap);
   min-width: 0;
 }
 

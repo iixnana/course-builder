@@ -10,7 +10,8 @@
 }
 
 .answer-list {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: var(--space-2);
   list-style: none;
 }
@@ -26,7 +27,7 @@
 }
 
 .answers-label {
-  margin-block-end: var(--space-2);
+  margin-block-end: var(--label-gap);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-semibold);
   line-height: var(--leading-sm);
@@ -40,4 +41,9 @@
 .answer-row[data-correct] .text-field-input {
   background: var(--color-green-100);
   border-color: var(--color-green-700);
+}
+
+.step-editor .button.image-replace-button,
+.step-editor .button.add-answer-button {
+  justify-self: center;
 }
