@@ -62,7 +62,7 @@ export const CourseBuilderView = ({
       </HideAway>
       {isLocked && !hasSteps && (
         <p className="course-locked-note">
-          Unlock editing to add your first step.
+          Unlock editing to add your first step
         </p>
       )}
     </div>
