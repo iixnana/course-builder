@@ -2,7 +2,7 @@ import { useRef, useState } from 'react'
 import { appName } from '../../appName'
 import { BlueberryLoader } from '../../components/BlueberryLoader/BlueberryLoader'
 import type { CourseRepository } from '../../../data/CourseRepository'
-import { useCourseHistory } from '../../../data/useCourseHistory'
+import { useCourseHistory } from '../../../hooks/useCourseHistory'
 import { useCourseReveal } from '../../../hooks/useCourseReveal'
 import { useEditingSession } from '../../../hooks/useEditingSession'
 import { useUndoRedoShortcuts } from '../../../hooks/useUndoRedoShortcuts'
@@ -16,8 +16,8 @@ import {
   trashStep,
   updateStep,
 } from '../../../model/course'
-import { stepTypeLabel, type Step } from '../../../model/step'
-import { redoLabel, undoLabel } from '../../../model/history'
+import type { Step } from '../../../model/step'
+import { canRedo, canUndo } from '../../../history/history'
 import { firstOnScreen, keepInView } from '../../../utils/keepInView'
 import { CourseBuilderView } from './CourseBuilder.view'
 import { StepToolbar } from './StepToolbar/StepToolbar'
@@ -74,8 +74,8 @@ export const CourseBuilder = ({ repository }: CourseBuilderProps) => {
     <>
       <StepToolbar
         isDisabled={!isRevealed}
-        undoLabel={history ? undoLabel(history) : undefined}
-        redoLabel={history ? redoLabel(history) : undefined}
+        canUndo={history ? canUndo(history) : false}
+        canRedo={history ? canRedo(history) : false}
         stepCount={steps.length}
         isAllCollapsed={isAllCollapsed}
         isLocked={isLocked}
@@ -96,19 +96,10 @@ export const CourseBuilder = ({ repository }: CourseBuilderProps) => {
           }
         }}
         onRestoreStep={(id) =>
-          updateCourse((course) => restoreStep(course, id), {
-            label: 'Restore step',
-          })
+          updateCourse((course) => restoreStep(course, id))
         }
-        onRestoreAll={() =>
-          updateCourse(restoreAllSteps, { label: 'Restore all steps' })
-        }
-        onEmptyTrash={() =>
-          updateCourse(emptyTrash, {
-            label: 'Delete steps forever',
-            isPermanent: true,
-          })
-        }
+        onRestoreAll={() => updateCourse(restoreAllSteps)}
+        onEmptyTrash={() => updateCourse(emptyTrash, { isPermanent: true })}
       />
       {course && (
         <CourseBuilderView
@@ -122,34 +113,25 @@ export const CourseBuilder = ({ repository }: CourseBuilderProps) => {
           addStepPanelRef={addStepPanel}
           onRenameCourse={(title) =>
             updateCourse((course) => renameCourse(course, title), {
-              label: 'Rename course',
               mergeKey: 'title',
             })
           }
           onAddStep={(step) => {
             keepInView(addStepPanel.current)
-            updateCourse((course) => addStep(course, step), {
-              label: `Add ${stepTypeLabel(step.type).toLowerCase()} step`,
-            })
+            updateCourse((course) => addStep(course, step))
             startEditing(step, true)
           }}
           onChangeStep={(step) =>
             updateCourse((course) => updateStep(course, step), {
-              label: 'Edit step',
               mergeKey: editing.mergeKey(step.id),
             })
           }
           onMoveSteps={(ids, targetId, position) =>
-            updateCourse(
-              (course) => moveSteps(course, ids, targetId, position),
-              { label: 'Reorder steps' },
-            )
+            updateCourse((course) => moveSteps(course, ids, targetId, position))
           }
           onTrashStep={(id) => {
             if (editingId === id) editing.stop()
-            updateCourse((course) => trashStep(course, id), {
-              label: 'Delete step',
-            })
+            updateCourse((course) => trashStep(course, id))
           }}
           onEdit={(id) => {
             const step = findStep(id)
@@ -159,9 +141,7 @@ export const CourseBuilder = ({ repository }: CourseBuilderProps) => {
           onDiscardEdit={(id) => {
             const original = editing.discard(findStep(id))
             if (!original) return
-            updateCourse((course) => updateStep(course, original), {
-              label: 'Discard changes',
-            })
+            updateCourse((course) => updateStep(course, original))
           }}
           onToggleCollapsed={(id) => {
             if (editingId === id) editing.stop()

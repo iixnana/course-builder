@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react'
-import type { Step } from '../../../../model/step'
+import type { Step } from '../model/step'
 
 export interface ExitingItem {
   step: Step

@@ -60,7 +60,7 @@ The course lives in the browser's session storage. A refresh keeps the work and 
 
 ## Key design decisions
 
-- The model is separate from the UI. `src/model` holds pure functions for every change to a course, `src/data` holds the undo history and a swappable repository, and the page components only render and dispatch.
+- Code follows pages based structure
 - Undo and redo cover every change and deleted steps go to a trash with restore. Nobody should be afraid of breaking something.
 - Edits are live. Typing updates the course straight away, and Discard puts the step back the way it was when editing started.
 - React Aria Components for every control, so keyboard and screen reader support come with the design instead of being added later.
