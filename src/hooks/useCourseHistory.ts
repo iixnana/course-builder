@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import type { Course } from '../model/course'
+import type { CourseRepository } from '../data/CourseRepository'
 import {
   commit,
   createHistory,
@@ -7,8 +7,8 @@ import {
   redo,
   undo,
   type History,
-} from './history'
-import type { CourseRepository } from '../data/CourseRepository'
+} from '../history/history'
+import type { Course } from '../model/course'
 
 type LoadState =
   | { status: 'loading' }

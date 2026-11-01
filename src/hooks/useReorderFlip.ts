@@ -1,6 +1,6 @@
 import { useLayoutEffect, useState } from 'react'
-import type { Step } from '../../../../model/step'
-import { motion } from '../../../../utils/presence'
+import type { Step } from '../model/step'
+import { motion } from '../utils/presence'
 
 const isReordered = (before: Step[], after: Step[]) => {
   const ids = new Set(after.map((step) => step.id))

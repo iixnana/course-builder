@@ -15,7 +15,12 @@ import {
   useState,
   type RefObject,
 } from 'react'
+import {
+  useExitingSteps,
+  type ExitingItem,
+} from '../../../../hooks/useExitingSteps'
 import { usePrefersReducedMotion } from '../../../../hooks/usePrefersReducedMotion'
+import { useReorderFlip } from '../../../../hooks/useReorderFlip'
 import type { Step } from '../../../../model/step'
 import { keepInView } from '../../../../utils/keepInView'
 import { inertStepCardHandlers } from '../StepCard/inertStepCardHandlers'
@@ -31,8 +36,6 @@ import { DragSwingOverlay, type DropRect } from './DragSwingOverlay'
 import { ExitingStep } from './ExitingStep'
 import { SettlingOverlay } from './SettlingOverlay'
 import { SortableStep } from './SortableStep'
-import { useExitingSteps, type ExitingItem } from './useExitingSteps'
-import { useReorderFlip } from './useReorderFlip'
 import '../../../components/Card/Card.css'
 import './StepList.css'
 
