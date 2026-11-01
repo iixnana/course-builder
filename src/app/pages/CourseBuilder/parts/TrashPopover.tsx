@@ -91,11 +91,7 @@ const TrashPopoverContent = ({
             <ArchiveRestore aria-hidden="true" />
             Restore All
           </Button>
-          <Button
-            variant="secondary"
-            className="trash-popover-delete"
-            onPress={() => setIsConfirmOpen(true)}
-          >
+          <Button variant="danger" onPress={() => setIsConfirmOpen(true)}>
             <Trash2 aria-hidden="true" />
             Delete All
           </Button>

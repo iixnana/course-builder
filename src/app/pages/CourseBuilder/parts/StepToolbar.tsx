@@ -51,7 +51,7 @@ export const StepToolbar = ({
   onEmptyTrash,
 }: StepToolbarProps) => (
   <HeaderActions>
-    <div role="group" aria-label="Step actions" className="step-toolbar">
+    <div role="group" aria-label="Course actions" className="step-toolbar">
       <IconToggleButton
         label="Lock Editing"
         className="step-toolbar-lock"

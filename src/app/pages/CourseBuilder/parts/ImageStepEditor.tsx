@@ -27,7 +27,7 @@ export const ImageStepEditor = ({ step, onChange }: ImageStepEditorProps) => (
       </div>
     )}
     <DialogTrigger>
-      <Button variant="secondary">
+      <Button variant="secondary" className="image-replace-button">
         <ImageUp aria-hidden="true" />
         {step.url ? 'Replace Image' : 'Add Image'}
       </Button>

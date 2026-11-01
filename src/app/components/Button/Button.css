@@ -1,5 +1,5 @@
 .button {
-  --bubble-color: var(--color-chocolate-900);
+  --bubble-color: var(--color-chocolate-800);
 
   position: relative;
   isolation: isolate;
@@ -12,7 +12,7 @@
   font-weight: var(--font-weight-semibold);
   color: var(--color-cream);
   cursor: pointer;
-  background: var(--color-chocolate-900);
+  background: var(--color-chocolate-800);
   border: none;
   border-radius: var(--radius-md);
   text-decoration: none;

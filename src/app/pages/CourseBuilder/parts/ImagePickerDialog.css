@@ -151,7 +151,7 @@
   display: grid;
   grid-template: minmax(0, 1fr) / minmax(0, 1fr);
   place-items: center;
-  height: 16rem;
+  height: min(16rem, 28dvh);
   overflow: hidden;
   background: var(--color-cream);
   border-radius: var(--radius-md);

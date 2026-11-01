@@ -1,3 +1,5 @@
+import { useRef } from 'react'
+import { useSmoothRise } from '../../hooks/useSmoothRise'
 import './SiteFooter.css'
 
 const wave =
@@ -7,29 +9,34 @@ const layers = ['caramel', 'milk', 'dark'] as const
 
 const tileCount = 8
 
-export const SiteFooter = () => (
-  <footer className="site-footer">
-    <div className="site-footer-waves" aria-hidden="true">
-      {Array.from({ length: tileCount }, (_, tile) => (
-        <svg
-          key={tile}
-          className="site-footer-tile"
-          viewBox="0 80 1320 300"
-          preserveAspectRatio="none"
-        >
-          {layers.map((layer) => (
-            <path
-              key={layer}
-              d={wave}
-              className={`site-footer-layer site-footer-layer-${layer}`}
-            />
-          ))}
-        </svg>
-      ))}
-    </div>
-    <p className="site-footer-text">
-      Frontend Case Solution for Attensi{' '}
-      <span className="site-footer-separator" /> Created by Kamile Nanartonyte
-    </p>
-  </footer>
-)
+export const SiteFooter = () => {
+  const footer = useRef<HTMLElement>(null)
+  useSmoothRise(footer)
+
+  return (
+    <footer ref={footer} className="site-footer">
+      <div className="site-footer-waves" aria-hidden="true">
+        {Array.from({ length: tileCount }, (_, tile) => (
+          <svg
+            key={tile}
+            className="site-footer-tile"
+            viewBox="0 80 1320 300"
+            preserveAspectRatio="none"
+          >
+            {layers.map((layer) => (
+              <path
+                key={layer}
+                d={wave}
+                className={`site-footer-layer site-footer-layer-${layer}`}
+              />
+            ))}
+          </svg>
+        ))}
+      </div>
+      <p className="site-footer-text">
+        Frontend Case Solution for Attensi{' '}
+        <span className="site-footer-separator" /> Created by Kamile Nanartonyte
+      </p>
+    </footer>
+  )
+}

@@ -1,6 +1,8 @@
 const settledFrames = 8
 const maxDuration = 2000
 
+const userScrollEvents = ['wheel', 'touchstart', 'keydown'] as const
+
 export const keepInView = (element: Element | null | undefined) => {
   if (!element) return
   const root = document.documentElement
@@ -8,10 +10,29 @@ export const keepInView = (element: Element | null | undefined) => {
   const startTime = performance.now()
   let hasMoved = false
   let stillFrames = 0
+  let isReleased = false
+
+  const release = () => {
+    isReleased = true
+  }
+
+  const finish = () => {
+    root.style.removeProperty('overflow-anchor')
+    for (const type of userScrollEvents) {
+      window.removeEventListener(type, release)
+    }
+  }
 
   root.style.overflowAnchor = 'none'
+  for (const type of userScrollEvents) {
+    window.addEventListener(type, release, { passive: true })
+  }
 
   const tick = () => {
+    if (isReleased) {
+      finish()
+      return
+    }
     const delta = element.getBoundingClientRect().top - startTop
     if (delta !== 0) {
       window.scrollBy(0, delta)
@@ -24,7 +45,7 @@ export const keepInView = (element: Element | null | undefined) => {
     if (!isSettled && performance.now() - startTime < maxDuration) {
       requestAnimationFrame(tick)
     } else {
-      root.style.removeProperty('overflow-anchor')
+      finish()
     }
   }
 

@@ -34,7 +34,7 @@
 
 .icon-button.trash-item-restore {
   color: var(--color-cream);
-  background: var(--color-chocolate-900);
+  background: var(--color-chocolate-800);
 }
 
 .trash-popover {
@@ -79,19 +79,6 @@
 
   & .button {
     width: 100%;
-  }
-}
-
-.button.trash-popover-delete {
-  --bubble-color: var(--color-cherry);
-
-  color: var(--color-cherry);
-  box-shadow: inset 0 0 0 var(--border-width-sm) var(--color-cherry);
-
-  &[data-focus-visible] {
-    box-shadow:
-      inset 0 0 0 var(--border-width-sm) var(--color-cherry),
-      var(--focus-ring);
   }
 }
 
