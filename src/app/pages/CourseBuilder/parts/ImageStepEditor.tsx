@@ -30,12 +30,18 @@ export const ImageStepEditor = ({ step, onChange }: ImageStepEditorProps) => {
 
   return (
     <>
+      <TextField
+        label="Title"
+        placeholder="e.g. The pipe alarm"
+        value={step.title}
+        onChange={(title) => onChange({ ...step, title })}
+      />
       {step.url && <img className="step-image" src={step.url} alt="" />}
       <FileTrigger
         acceptedFileTypes={['image/*']}
         onSelect={(files) => void uploadImage(files)}
       >
-        <Button variant="secondary" autoFocus>
+        <Button variant="secondary">
           <Upload aria-hidden="true" />
           {step.url ? 'Replace image' : 'Upload image'}
         </Button>

@@ -1,0 +1,62 @@
+.chocolate-drips {
+  --drips-color: currentColor;
+  --drips-band: var(--space-6);
+  --drips-fall: calc(var(--space-16) + var(--space-8));
+
+  position: absolute;
+  inset-block-start: 100%;
+  inset-inline: calc(-1 * var(--space-8));
+  pointer-events: none;
+}
+
+.chocolate-drips-goo {
+  position: relative;
+  height: calc(var(--drips-band) + var(--drips-fall));
+  margin-block-start: calc(-1 * var(--drips-band) / 2);
+  background: linear-gradient(var(--drips-color) 0 0) top / 100%
+    var(--drips-band) no-repeat;
+}
+
+.chocolate-drip {
+  position: absolute;
+  inset-block-start: calc(var(--drips-band) - var(--size));
+  inset-inline-start: var(--position);
+  width: var(--size);
+  height: var(--size);
+  background: var(--drips-color);
+  border-radius: var(--radius-full);
+  translate: -50% 0;
+  animation:
+    drip-fall var(--time) ease-in infinite var(--delay),
+    drip-shrink var(--time) ease-in infinite var(--delay);
+}
+
+.chocolate-drips-filter {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+@keyframes drip-fall {
+  to {
+    translate: -50% var(--distance);
+  }
+}
+
+@keyframes drip-shrink {
+  0%,
+  75% {
+    scale: 1;
+  }
+
+  100% {
+    scale: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chocolate-drip {
+    translate: -50% 50%;
+    animation: none;
+  }
+}

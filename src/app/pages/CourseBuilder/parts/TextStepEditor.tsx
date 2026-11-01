@@ -10,7 +10,6 @@ export const TextStepEditor = ({ step, onChange }: TextStepEditorProps) => (
   <TextField
     label="Text"
     isMultiline
-    autoFocus
     placeholder="What should the trainee read?"
     value={step.body}
     onChange={(body) => onChange({ ...step, body })}

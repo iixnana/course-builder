@@ -1,6 +1,12 @@
 .course-builder {
   display: grid;
-  gap: var(--space-6);
+  gap: var(--space-4);
+
+  &:not([data-revealed]) {
+    max-height: 0;
+    overflow: clip;
+    visibility: hidden;
+  }
 }
 
 .course-details {

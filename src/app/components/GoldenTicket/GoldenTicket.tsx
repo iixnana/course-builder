@@ -9,7 +9,9 @@ export const GoldenTicket = ({
   className,
   children,
 }: PropsWithChildren<GoldenTicketProps>) => (
-  <div className={className ? `golden-ticket ${className}` : 'golden-ticket'}>
-    {children}
+  <div className="golden-ticket-shadow">
+    <div className={className ? `golden-ticket ${className}` : 'golden-ticket'}>
+      {children}
+    </div>
   </div>
 )

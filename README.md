@@ -36,4 +36,4 @@ I use Claude Code as a pair programmer. I make the design and architecture decis
 - **Iterating on design:** I review the overall design in the browser on various screen sizes and give feedback to Claude to iterate on until I am happy with the result.
 - **Standing rules:** Claude Code's memory holds my conventions: good practices, preference on local vs shared variables and functions, responsive design, typography, WCAG AA contrast checks, tests and no unnecessary code comments.
 - **Verification:** every change is checked with lint, Stylelint, Vitest and Testing Library tests, and a production build. Visual changes are also checked with headless Chrome screenshots at desktop and phone widths.
-- **Git:** I manage git commits myself.
+- **Git:** I manage git commits myself. Since it's a small demo project with limited hours, I didn't focus on creating small PRs, as I was reviewing the code changes on the code while iterating with Claude.

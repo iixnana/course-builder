@@ -7,6 +7,7 @@ export interface TextStep {
 export interface ImageStep {
   id: string
   type: 'image'
+  title: string
   url: string
   alt: string
 }
@@ -59,7 +60,7 @@ export const createStep = (type: StepType): Step => {
     case 'text':
       return { id, type, body: '' }
     case 'image':
-      return { id, type, url: '', alt: '' }
+      return { id, type, title: '', url: '', alt: '' }
     case 'multipleChoice':
       return {
         id,
@@ -76,7 +77,7 @@ export const stepSummary = (step: Step): string => {
     case 'text':
       return step.body.trim().split('\n')[0] || 'Empty text'
     case 'image':
-      return step.alt || 'Untitled image'
+      return step.title.trim() || 'Untitled image'
     case 'multipleChoice':
       return step.question || 'Untitled question'
   }
@@ -88,6 +89,7 @@ export const stepIssues = (step: Step): string[] => {
       return step.body.trim() ? [] : ['Add some text']
     case 'image':
       return [
+        ...(step.title.trim() ? [] : ['Give the image a title']),
         ...(step.url ? [] : ['Add an image']),
         ...(step.alt.trim() ? [] : ['Describe the image for screen readers']),
       ]

@@ -4,7 +4,7 @@
   gap: var(--space-2);
   align-items: center;
   justify-content: space-between;
-  color: var(--color-cream);
+  color: var(--color-text);
 }
 
 .step-stats {
@@ -26,7 +26,7 @@
   gap: var(--space-2);
   align-items: center;
   font-weight: var(--font-weight-semibold);
-  color: var(--color-warning-400);
+  color: var(--color-cherry);
 
   &:empty {
     display: none;
@@ -56,4 +56,24 @@
   color: var(--color-chocolate-950);
   background: var(--color-gold);
   border-radius: var(--radius-full);
+}
+
+@media (width < 48rem) {
+  .step-toolbar-row {
+    flex-wrap: nowrap;
+  }
+
+  .step-stats {
+    flex-direction: column;
+    gap: 0;
+    align-items: start;
+    justify-content: center;
+    min-width: 0;
+    min-height: calc(2 * var(--leading-md));
+  }
+
+  .step-stats-issues {
+    font-size: var(--font-size-sm);
+    line-height: var(--leading-sm);
+  }
 }

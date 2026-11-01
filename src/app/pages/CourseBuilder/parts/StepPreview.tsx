@@ -16,7 +16,14 @@ export const StepPreview = ({ step }: StepPreviewProps) => {
       )
     case 'image':
       return step.url ? (
-        <img className="step-image" src={step.url} alt={step.alt} />
+        <figure className="step-figure">
+          <img className="step-image" src={step.url} alt={step.alt} />
+          {step.alt.trim() && (
+            <figcaption className="step-image-caption" aria-hidden="true">
+              {step.alt}
+            </figcaption>
+          )}
+        </figure>
       ) : (
         <div className="step-image-placeholder">
           <ImageIcon aria-hidden="true" />
