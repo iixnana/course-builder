@@ -1,6 +1,6 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom'
 import { NavigationRoute } from './routes'
-import App from '../app/App'
+import { App } from '../app/App'
 import { CourseBuilderPage } from '../app/pages/CourseBuilder/CourseBuilder.page'
 import { ErrorPage } from '../app/pages/Errors/Error.page'
 import { NotFoundPage } from '../app/pages/Errors/NotFound.page'

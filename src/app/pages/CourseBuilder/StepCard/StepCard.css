@@ -13,28 +13,8 @@
   align-items: center;
 }
 
-.step-drag-handle {
-  cursor: grab;
-
-  &[data-pressed] {
-    cursor: grabbing;
-  }
-}
-
-.step-type-badge {
-  display: inline-grid;
+.step-card-header .step-type-badge {
   margin-inline-end: var(--space-1);
-  flex-shrink: 0;
-  place-items: center;
-  width: var(--space-8);
-  height: var(--space-8);
-  background: color-mix(in sRGB, var(--color-accent) 25%, transparent);
-  border-radius: var(--radius-md);
-}
-
-.step-type-icon {
-  width: var(--icon-size);
-  height: var(--icon-size);
 }
 
 .icon-button.step-edit-button {

@@ -1,6 +1,7 @@
 .hide-away {
   --hide-away-duration: var(--motion-duration);
   --hide-away-easing: var(--motion-easing);
+  --hide-away-visibility-delay: 0s;
 
   display: grid;
   transition:
@@ -8,7 +9,7 @@
     grid-template-rows var(--hide-away-duration) var(--hide-away-easing),
     opacity var(--hide-away-duration) var(--hide-away-easing),
     scale var(--hide-away-duration) var(--hide-away-easing),
-    visibility 0s;
+    visibility 0s var(--hide-away-visibility-delay);
 
   &[data-axis='inline'] {
     grid-template-columns: 1fr;
@@ -19,15 +20,11 @@
   }
 
   &[data-hidden] {
+    --hide-away-visibility-delay: var(--hide-away-duration);
+
     visibility: hidden;
     opacity: 0;
     scale: 0.8;
-    transition:
-      grid-template-columns var(--hide-away-duration) var(--hide-away-easing),
-      grid-template-rows var(--hide-away-duration) var(--hide-away-easing),
-      opacity var(--hide-away-duration) var(--hide-away-easing),
-      scale var(--hide-away-duration) var(--hide-away-easing),
-      visibility 0s var(--hide-away-duration);
 
     &[data-axis='inline'] {
       grid-template-columns: 0fr;

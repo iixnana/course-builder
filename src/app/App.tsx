@@ -4,7 +4,7 @@ import { Outlet, useHref, useNavigate } from 'react-router-dom'
 import { BlueberryLoader } from './components/BlueberryLoader/BlueberryLoader'
 import { PageLayout } from './layout/PageLayout'
 
-export default function App() {
+export const App = () => {
   const navigate = useNavigate()
 
   return (

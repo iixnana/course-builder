@@ -40,20 +40,14 @@
 
 .course-add-steps {
   transition:
-    margin-block-start var(--motion-duration) var(--motion-easing),
-    grid-template-rows var(--motion-duration) var(--motion-easing),
-    opacity var(--motion-duration) var(--motion-easing),
-    scale var(--motion-duration) var(--motion-easing),
-    visibility 0s;
+    margin-block-start var(--hide-away-duration) var(--hide-away-easing),
+    grid-template-rows var(--hide-away-duration) var(--hide-away-easing),
+    opacity var(--hide-away-duration) var(--hide-away-easing),
+    scale var(--hide-away-duration) var(--hide-away-easing),
+    visibility 0s var(--hide-away-visibility-delay);
 
   &[data-hidden] {
     margin-block-start: calc(-1 * var(--space-4));
-    transition:
-      margin-block-start var(--motion-duration) var(--motion-easing),
-      grid-template-rows var(--motion-duration) var(--motion-easing),
-      opacity var(--motion-duration) var(--motion-easing),
-      scale var(--motion-duration) var(--motion-easing),
-      visibility 0s var(--motion-duration);
   }
 }
 

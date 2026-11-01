@@ -3,7 +3,7 @@ import { springKeyframes } from '../../../../utils/spring'
 import type { DropRect } from './DragSwingOverlay'
 
 interface SettlingOverlayProps {
-  id: string
+  target: Element
   rect: DropRect
   rotation: number
   onDone: () => void
@@ -16,7 +16,7 @@ const frames = 60
 const liftScale = 1.04
 
 export const SettlingOverlay = ({
-  id,
+  target,
   rect,
   rotation,
   onDone,
@@ -26,17 +26,17 @@ export const SettlingOverlay = ({
   const poseRef = useRef<HTMLDivElement>(null)
 
   useLayoutEffect(() => {
-    const target = document.querySelector(`[data-settling-target="${id}"]`)
-    if (!target || !positionRef.current || !poseRef.current) {
+    if (!positionRef.current || !poseRef.current) {
       onDone()
       return
     }
     const to = target.getBoundingClientRect()
+    const { scrollX, scrollY } = window
     const spring = (from: number, end: number) =>
       springKeyframes(from, end, frames, settleSpring, settleSeconds)
 
-    const xs = spring(rect.left, to.left)
-    const ys = spring(rect.top, to.top)
+    const xs = spring(rect.left + scrollX, to.left + scrollX)
+    const ys = spring(rect.top + scrollY, to.top + scrollY)
     const position = positionRef.current.animate(
       xs.map((x, index) => ({
         transform: `translate(${x}px, ${ys[index]}px)`,
@@ -58,17 +58,13 @@ export const SettlingOverlay = ({
       position.cancel()
       pose.cancel()
     }
-  }, [id, rect, rotation, onDone])
+  }, [target, rect, rotation, onDone])
 
   return (
     <div
       ref={positionRef}
       className="settling-overlay"
-      style={{
-        width: rect.width,
-        height: rect.height,
-        transform: `translate(${rect.left}px, ${rect.top}px)`,
-      }}
+      style={{ width: rect.width, height: rect.height }}
     >
       <div ref={poseRef} className="settling-pose">
         {children}

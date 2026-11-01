@@ -7,6 +7,7 @@ import {
   TextField as AriaTextField,
   type TextFieldProps as AriaTextFieldProps,
 } from 'react-aria-components'
+import { classNames } from '../../../utils/classNames'
 import './TextField.css'
 
 interface TextFieldProps extends AriaTextFieldProps {
@@ -30,12 +31,10 @@ export const TextField = ({
     isInvalid={Boolean(errorMessage)}
     {...props}
     className={composeRenderProps(className, (className) =>
-      className ? `text-field ${className}` : 'text-field',
+      classNames('text-field', className),
     )}
   >
-    <Label
-      className={isLabelHidden ? 'screen-reader-only' : 'text-field-label'}
-    >
+    <Label className={isLabelHidden ? 'screen-reader-only' : 'field-label'}>
       {label}
     </Label>
     {isMultiline ? (
@@ -43,6 +42,6 @@ export const TextField = ({
     ) : (
       <Input className="text-field-input" placeholder={placeholder} />
     )}
-    <FieldError className="text-field-error">{errorMessage}</FieldError>
+    <FieldError className="field-error">{errorMessage}</FieldError>
   </AriaTextField>
 )

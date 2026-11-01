@@ -7,13 +7,14 @@
   margin-inline-end: var(--space-2);
 
   & svg {
-    animation: lock-snap 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    animation: lock-snap calc(2 * var(--motion-duration-snap))
+      var(--motion-easing-bounce);
   }
 }
 
 .step-toolbar .icon-button {
   transition:
-    background-color 150ms ease,
+    var(--hover-transition),
     opacity var(--motion-duration) var(--motion-easing),
     var(--focus-transition);
 }

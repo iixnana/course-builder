@@ -17,7 +17,7 @@
   --column-width: var(--page-width);
 
   position: relative;
-  z-index: 1;
+  z-index: var(--layer-raised);
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
@@ -45,17 +45,14 @@
   }
 }
 
-.site-header-logo-button {
+.site-header-logo-link {
   --focus-ring-color: var(--color-gold);
 
-  padding: 0;
-  cursor: pointer;
-  background: none;
-  border: none;
+  display: block;
   border-radius: var(--radius-md);
   outline: none;
   transition:
-    scale 250ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    scale var(--motion-duration-snap) var(--motion-easing-bounce),
     var(--focus-transition);
 
   &[data-hovered] {
@@ -114,7 +111,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .site-header-logo-button {
+  .site-header-logo-link {
     transition: var(--focus-transition);
 
     &[data-hovered],

@@ -1,4 +1,5 @@
 import { useEffect, useRef, type ReactNode } from 'react'
+import { classNames } from '../../../utils/classNames'
 import './CandyScroll.css'
 
 interface CandyScrollProps {
@@ -45,12 +46,7 @@ export const CandyScroll = ({ className, children }: CandyScrollProps) => {
 
   return (
     <div className="candy-scroll">
-      <div
-        ref={area}
-        className={
-          className ? `candy-scroll-area ${className}` : 'candy-scroll-area'
-        }
-      >
+      <div ref={area} className={classNames('candy-scroll-area', className)}>
         {children}
       </div>
       <div ref={bar} className="candy-scroll-bar" aria-hidden="true">

@@ -8,10 +8,8 @@ import {
   Undo2,
 } from 'lucide-react'
 import { DialogTrigger } from 'react-aria-components'
-import {
-  IconButton,
-  IconToggleButton,
-} from '../../../components/IconButton/IconButton'
+import { IconButton } from '../../../components/IconButton/IconButton'
+import { IconToggleButton } from '../../../components/IconButton/IconToggleButton'
 import type { TrashedStep } from '../../../../model/course'
 import { TrashPopover } from '../Trash/TrashPopover'
 import { HeaderActions } from '../../../layout/HeaderActions'

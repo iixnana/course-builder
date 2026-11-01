@@ -2,38 +2,42 @@ import {
   closestCenter,
   DndContext,
   DragOverlay,
-  KeyboardSensor,
   PointerSensor,
   useSensor,
   useSensors,
-  type Announcements,
-  type UniqueIdentifier,
 } from '@dnd-kit/core'
-import {
-  SortableContext,
-  sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
-} from '@dnd-kit/sortable'
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import {
   useCallback,
   useEffect,
   useLayoutEffect,
   useRef,
   useState,
+  type RefObject,
 } from 'react'
 import { usePrefersReducedMotion } from '../../../../hooks/usePrefersReducedMotion'
-import { stepSummary, type Step } from '../../../../model/course'
-import { motion } from '../../../../utils/presence'
-import { DragHandle } from './DragHandle'
+import type { Step } from '../../../../model/step'
+import { keepInView } from '../../../../utils/keepInView'
+import { inertStepCardHandlers } from '../StepCard/inertStepCardHandlers'
+import { StepCard } from '../StepCard/StepCard'
+import {
+  dragAnnouncements,
+  dragInstructions,
+  edgeAnnouncement,
+  moveAnnouncement,
+} from './dragAnnouncements'
+import { DragHandle, type MoveDirection } from './DragHandle'
 import { DragSwingOverlay, type DropRect } from './DragSwingOverlay'
 import { ExitingStep } from './ExitingStep'
 import { SettlingOverlay } from './SettlingOverlay'
 import { SortableStep } from './SortableStep'
-import { StepCard } from '../StepCard/StepCard'
+import { useExitingSteps, type ExitingItem } from './useExitingSteps'
+import { useReorderFlip } from './useReorderFlip'
 import '../../../components/Card/Card.css'
 import './StepList.css'
 
 export interface StepListProps {
+  ref?: RefObject<HTMLOListElement | null>
   steps: Step[]
   editingId: string | null
   isLocked: boolean
@@ -51,31 +55,14 @@ export interface StepListProps {
   onTrashStep: (id: string) => void
 }
 
-interface ExitingItem {
-  step: Step
-  index: number
-  wasEditing: boolean
-}
-
 type ListItem =
   { kind: 'step'; step: Step } | { kind: 'exiting'; item: ExitingItem }
 
-const isReordered = (before: Step[], after: Step[]) => {
-  const ids = new Set(after.map((step) => step.id))
-  const kept = before.filter((step) => ids.has(step.id))
-  const keptIds = new Set(kept.map((step) => step.id))
-  const reordered = after.filter((step) => keptIds.has(step.id))
-  return kept.some((step, index) => step.id !== reordered[index].id)
-}
-
-const readStepOffsets = () => {
-  const list = document.querySelector<HTMLElement>('.step-list')
-  const offsets = new Map<string, number>()
-  if (!list) return offsets
-  for (const item of list.querySelectorAll<HTMLElement>('[data-step-id]')) {
-    offsets.set(item.dataset.stepId ?? '', item.offsetTop - list.offsetTop)
-  }
-  return offsets
+interface Settling {
+  id: string
+  target: Element
+  rect: DropRect
+  rotation: number
 }
 
 const withExiting = (steps: Step[], exiting: ExitingItem[]): ListItem[] => {
@@ -89,15 +76,8 @@ const withExiting = (steps: Step[], exiting: ExitingItem[]): ListItem[] => {
   return items
 }
 
-interface Settling {
-  id: string
-  rect: DropRect
-  rotation: number
-}
-
-const ignore = () => undefined
-
 export const StepList = ({
+  ref,
   steps,
   editingId,
   isLocked,
@@ -111,95 +91,67 @@ export const StepList = ({
   onTrashStep,
 }: StepListProps) => {
   const hasMotion = !usePrefersReducedMotion()
+  const [list, setList] = useState<HTMLOListElement | null>(null)
   const [activeId, setActiveId] = useState<string | null>(null)
   const [settling, setSettling] = useState<Settling | null>(null)
   const clearSettling = useCallback(() => setSettling(null), [])
   const isMounted = useRef(false)
   const isListMounted = useCallback(() => isMounted.current, [])
-  const list = useRef<HTMLOListElement>(null)
-  const [previousSteps, setPreviousSteps] = useState(steps)
-  const [exiting, setExiting] = useState<ExitingItem[]>([])
-  const [previousEditingId, setPreviousEditingId] = useState(editingId)
-  const [flipFrom, setFlipFrom] = useState<Map<string, number> | null>(null)
-  const [isDropping, setIsDropping] = useState(false)
-
-  if (steps !== previousSteps) {
-    setPreviousSteps(steps)
-    const ids = new Set(steps.map((step) => step.id))
-    const removed = hasMotion
-      ? previousSteps.flatMap((step, index) =>
-          ids.has(step.id)
-            ? []
-            : [{ step, index, wasEditing: step.id === previousEditingId }],
-        )
-      : []
-    setExiting((current) => [
-      ...current.filter((item) => !ids.has(item.step.id)),
-      ...removed,
-    ])
-    if (isDropping) {
-      setIsDropping(false)
-    } else if (hasMotion && isReordered(previousSteps, steps)) {
-      setFlipFrom(readStepOffsets())
-    }
-  }
-  if (editingId !== previousEditingId) setPreviousEditingId(editingId)
-
-  const removeExiting = useCallback((id: string) => {
-    setExiting((current) => current.filter((item) => item.step.id !== id))
-  }, [])
-
-  useLayoutEffect(() => {
-    const element = list.current
-    if (!flipFrom || !element) return
-    const timing = motion()
-    for (const item of element.querySelectorAll<HTMLElement>(
-      '[data-step-id]',
-    )) {
-      const from = flipFrom.get(item.dataset.stepId ?? '')
-      if (from === undefined) continue
-      const delta = from - (item.offsetTop - element.offsetTop)
-      if (Math.abs(delta) < 1) continue
-      item.animate(
-        [{ translate: `0 ${delta}px` }, { translate: '0 0' }],
-        timing,
-      )
-    }
-  }, [flipFrom])
+  const stepNodes = useRef(new Map<string, HTMLLIElement>())
+  const [announcement, setAnnouncement] = useState('')
+  const refocusId = useRef<string | null>(null)
+  const { exiting, removeExiting } = useExitingSteps(
+    steps,
+    editingId,
+    hasMotion,
+  )
+  const skipNextFlip = useReorderFlip(steps, list, hasMotion)
 
   useEffect(() => {
     isMounted.current = true
   }, [])
 
-  const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 4 } }),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    }),
-  )
-
-  const findStep = (id: UniqueIdentifier | null | undefined) =>
-    steps.find((step) => step.id === id)
-  const position = (id: UniqueIdentifier) =>
-    steps.findIndex((step) => step.id === id) + 1
-  const nameOf = (id: UniqueIdentifier) => {
-    const step = findStep(id)
-    return step ? `"${stepSummary(step)}"` : 'Step'
+  const attachList = (node: HTMLOListElement | null) => {
+    setList(node)
+    if (ref) ref.current = node
   }
 
-  const announcements: Announcements = {
-    onDragStart: ({ active }) =>
-      `Picked up ${nameOf(active.id)}. It is at position ${position(active.id)} of ${steps.length}.`,
-    onDragOver: ({ active, over }) =>
-      over
-        ? `${nameOf(active.id)} moved to position ${position(over.id)} of ${steps.length}.`
-        : `${nameOf(active.id)} is no longer over the list.`,
-    onDragEnd: ({ active, over }) =>
-      over
-        ? `Dropped ${nameOf(active.id)} at position ${position(over.id)} of ${steps.length}.`
-        : `Dropped ${nameOf(active.id)}.`,
-    onDragCancel: ({ active }) =>
-      `Cancelled. ${nameOf(active.id)} went back to position ${position(active.id)}.`,
+  const trackNode = useCallback((id: string, node: HTMLLIElement | null) => {
+    if (node) stepNodes.current.set(id, node)
+    else stepNodes.current.delete(id)
+  }, [])
+
+  useLayoutEffect(() => {
+    const id = refocusId.current
+    if (!id) return
+    refocusId.current = null
+    stepNodes.current
+      .get(id)
+      ?.querySelector<HTMLElement>('.step-drag-handle')
+      ?.focus({ preventScroll: true })
+  }, [steps])
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 4 } }),
+  )
+
+  const findStep = (id: string | null | undefined) =>
+    steps.find((step) => step.id === id)
+  const position = (id: string) => steps.findIndex((step) => step.id === id)
+
+  const moveByKeyboard = (id: string, direction: MoveDirection) => {
+    const step = findStep(id)
+    const index = position(id)
+    const target = steps[index + direction]
+    if (!step) return
+    if (!target) {
+      setAnnouncement(edgeAnnouncement(step, direction))
+      return
+    }
+    keepInView(stepNodes.current.get(id))
+    onMoveSteps([id], target.id, direction > 0 ? 'after' : 'before')
+    setAnnouncement(moveAnnouncement(step, index + direction + 1, steps.length))
+    refocusId.current = id
   }
 
   const renderStaticCard = (step: Step) => (
@@ -209,11 +161,7 @@ export const StepList = ({
         dragHandle={<DragHandle tabIndex={-1} isDecorative />}
         isCollapsed={collapsedIds.has(step.id)}
         isEditing={false}
-        onToggleCollapsed={ignore}
-        onEdit={ignore}
-        onDiscard={ignore}
-        onChange={ignore}
-        onTrash={ignore}
+        {...inertStepCardHandlers}
       />
     </div>
   )
@@ -227,11 +175,8 @@ export const StepList = ({
       sensors={sensors}
       collisionDetection={closestCenter}
       accessibility={{
-        announcements,
-        screenReaderInstructions: {
-          draggable:
-            'To reorder a step, press Space or Enter on its drag handle, use the arrow keys to move it, then press Space or Enter to drop it. Press Escape to cancel.',
-        },
+        announcements: dragAnnouncements(steps),
+        screenReaderInstructions: { draggable: dragInstructions },
       }}
       onDragStart={({ active }) => {
         setSettling(null)
@@ -239,11 +184,13 @@ export const StepList = ({
       }}
       onDragEnd={({ active, over }) => {
         if (over && active.id !== over.id) {
-          setIsDropping(true)
+          const from = String(active.id)
+          const to = String(over.id)
+          skipNextFlip()
           onMoveSteps(
-            [String(active.id)],
-            String(over.id),
-            position(active.id) < position(over.id) ? 'after' : 'before',
+            [from],
+            to,
+            position(from) < position(to) ? 'after' : 'before',
           )
         }
         setActiveId(null)
@@ -255,7 +202,7 @@ export const StepList = ({
         strategy={verticalListSortingStrategy}
       >
         <ol
-          ref={list}
+          ref={attachList}
           className="step-list"
           data-empty={steps.length === 0 || undefined}
           role="list"
@@ -279,9 +226,10 @@ export const StepList = ({
                   activeId === listItem.step.id ||
                   settling?.id === listItem.step.id
                 }
-                isSettling={settling?.id === listItem.step.id}
                 hasMotion={hasMotion}
                 isListMounted={isListMounted}
+                onNode={trackNode}
+                onMove={moveByKeyboard}
               >
                 {(dragHandle) => (
                   <StepCard
@@ -308,12 +256,19 @@ export const StepList = ({
         </ol>
       </SortableContext>
 
+      <p role="status" className="screen-reader-only">
+        {announcement}
+      </p>
+
       <DragOverlay dropAnimation={null}>
         {activeStep && (
           <DragSwingOverlay
             hasMotion={hasMotion}
             onRelease={(rect, rotation) => {
-              if (hasMotion) setSettling({ id: activeStep.id, rect, rotation })
+              const target = stepNodes.current.get(activeStep.id)
+              if (hasMotion && target) {
+                setSettling({ id: activeStep.id, target, rect, rotation })
+              }
             }}
           >
             {renderStaticCard(activeStep)}
@@ -323,7 +278,7 @@ export const StepList = ({
 
       {settling && settlingStep && (
         <SettlingOverlay
-          id={settling.id}
+          target={settling.target}
           rect={settling.rect}
           rotation={settling.rotation}
           onDone={clearSettling}

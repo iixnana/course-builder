@@ -3,47 +3,6 @@
   gap: var(--space-4);
 
   & .button {
-    gap: var(--space-2);
     justify-self: start;
-    width: auto;
   }
-}
-
-.answer-list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-  list-style: none;
-}
-
-.answer-row {
-  display: flex;
-  gap: var(--space-2);
-  align-items: center;
-
-  & .text-field {
-    flex: 1;
-  }
-}
-
-.answers-label {
-  margin-block-end: var(--label-gap);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-semibold);
-  line-height: var(--leading-sm);
-}
-
-.icon-button.answer-correct-toggle[data-selected] {
-  color: var(--color-cream);
-  background: var(--color-green-700);
-}
-
-.answer-row[data-correct] .text-field-input {
-  background: var(--color-green-100);
-  border-color: var(--color-green-700);
-}
-
-.step-editor .button.image-replace-button,
-.step-editor .button.add-answer-button {
-  justify-self: center;
 }

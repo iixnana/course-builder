@@ -1,47 +1,22 @@
-import type { ReactNode } from 'react'
+import type { ReactNode, Ref } from 'react'
 import {
   Button,
   composeRenderProps,
-  ToggleButton,
-  Tooltip,
-  TooltipTrigger,
   type ButtonProps,
-  type ToggleButtonProps,
-  type TooltipTriggerComponentProps,
 } from 'react-aria-components'
 import { useBubbleBurst } from '../../../hooks/useBubbleBurst'
 import { BubbleBurst } from '../BubbleBurst/BubbleBurst'
+import { Tooltip } from '../Tooltip/Tooltip'
+import { TooltipTrigger } from '../Tooltip/TooltipTrigger'
+import { iconButtonClass } from './iconButtonClass'
 import './IconButton.css'
 
-interface IconButtonLabel {
+interface IconButtonProps extends Omit<ButtonProps, 'children' | 'aria-label'> {
   label: string
   children: ReactNode
+  variant?: 'ghost' | 'primary'
+  ref?: Ref<HTMLButtonElement>
 }
-
-type IconButtonProps = IconButtonLabel &
-  Omit<ButtonProps, 'children' | 'aria-label'> & {
-    variant?: 'ghost' | 'primary'
-  }
-
-type IconToggleButtonProps = IconButtonLabel &
-  Omit<ToggleButtonProps, 'children' | 'aria-label'>
-
-const withIconButtonClass = (className?: string) =>
-  className ? `icon-button ${className}` : 'icon-button'
-
-const tooltipOffset = 6
-
-export const IconTooltipTrigger = (props: TooltipTriggerComponentProps) => (
-  <TooltipTrigger delay={600} closeDelay={0} {...props} />
-)
-
-export const IconButtonTooltip = ({
-  label,
-}: Pick<IconButtonLabel, 'label'>) => (
-  <Tooltip className="tooltip" placement="bottom" offset={tooltipOffset}>
-    {label}
-  </Tooltip>
-)
 
 export const IconButton = ({
   label,
@@ -55,12 +30,12 @@ export const IconButton = ({
   const isPrimary = variant === 'primary'
 
   return (
-    <IconTooltipTrigger>
+    <TooltipTrigger>
       <Button
         {...props}
         aria-label={label}
         data-variant={variant}
-        className={composeRenderProps(className, withIconButtonClass)}
+        className={composeRenderProps(className, iconButtonClass)}
         onPress={(event) => {
           if (isPrimary) triggerBurst()
           onPress?.(event)
@@ -69,25 +44,7 @@ export const IconButton = ({
         {children}
         {isPrimary && <BubbleBurst burst={burst} />}
       </Button>
-      <IconButtonTooltip label={label} />
-    </IconTooltipTrigger>
+      <Tooltip label={label} />
+    </TooltipTrigger>
   )
 }
-
-export const IconToggleButton = ({
-  label,
-  children,
-  className,
-  ...props
-}: IconToggleButtonProps) => (
-  <IconTooltipTrigger>
-    <ToggleButton
-      {...props}
-      aria-label={label}
-      className={composeRenderProps(className, withIconButtonClass)}
-    >
-      {children}
-    </ToggleButton>
-    <IconButtonTooltip label={label} />
-  </IconTooltipTrigger>
-)

@@ -5,14 +5,7 @@ const userScrollEvents = ['wheel', 'touchstart', 'keydown'] as const
 
 let activeRun = 0
 
-interface KeepInViewOptions {
-  onlyDown?: boolean
-}
-
-export const keepInView = (
-  element: Element | null | undefined,
-  { onlyDown = false }: KeepInViewOptions = {},
-) => {
+export const keepInView = (element: Element | null | undefined) => {
   if (!element) return
   const root = document.documentElement
   const startTop = element.getBoundingClientRect().top
@@ -35,9 +28,6 @@ export const keepInView = (
   }
 
   root.style.overflowAnchor = 'none'
-  for (const type of userScrollEvents) {
-    window.addEventListener(type, release, { passive: true })
-  }
 
   const tick = () => {
     if (isReleased || run !== activeRun) {
@@ -45,7 +35,7 @@ export const keepInView = (
       return
     }
     const delta = element.getBoundingClientRect().top - startTop
-    if (delta > 0 || (delta < 0 && !onlyDown)) {
+    if (delta !== 0) {
       window.scrollBy(0, delta)
       hasMoved = true
       stillFrames = 0
@@ -60,23 +50,18 @@ export const keepInView = (
     }
   }
 
-  requestAnimationFrame(tick)
+  requestAnimationFrame(() => {
+    for (const type of userScrollEvents) {
+      window.addEventListener(type, release, { passive: true })
+    }
+    tick()
+  })
 }
 
-const stepElements = () => [
-  ...document.querySelectorAll<HTMLElement>('[data-step-id]'),
-]
-
-export const findStepElement = (id: string) =>
-  stepElements().find((element) => element.dataset.stepId === id)
-
-export const findAddStepPanel = () =>
-  document.querySelector<HTMLElement>('[data-scroll-anchor="add-step"]')
-
-export const findFirstVisibleStepElement = () => {
-  const elements = stepElements()
+export const firstOnScreen = (elements: Iterable<Element>) => {
+  const list = [...elements]
   return (
-    elements.find((element) => element.getBoundingClientRect().top >= 0) ??
-    elements.find((element) => element.getBoundingClientRect().bottom > 0)
+    list.find((element) => element.getBoundingClientRect().top >= 0) ??
+    list.find((element) => element.getBoundingClientRect().bottom > 0)
   )
 }

@@ -1,4 +1,4 @@
-export interface SpringConfig {
+interface SpringConfig {
   stiffness: number
   damping: number
   mass?: number

@@ -1,0 +1,22 @@
+.step-drag-handle {
+  touch-action: none;
+  cursor: grab;
+
+  &:hover {
+    background: color-mix(in sRGB, currentColor 12%, transparent);
+  }
+
+  &:active {
+    cursor: grabbing;
+  }
+
+  &:focus-visible {
+    outline: var(--focus-ring-width) solid transparent;
+    box-shadow: var(--focus-ring);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: var(--opacity-disabled);
+  }
+}

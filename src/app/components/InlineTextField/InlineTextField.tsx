@@ -7,6 +7,7 @@ import {
   TextField,
   type TextFieldProps,
 } from 'react-aria-components'
+import { classNames } from '../../../utils/classNames'
 import './InlineTextField.css'
 
 interface InlineTextFieldProps extends TextFieldProps {
@@ -33,7 +34,7 @@ export const InlineTextField = ({
     {...props}
     onChange={(value) => onChange?.(isWrapping ? toSingleLine(value) : value)}
     className={composeRenderProps(className, (className) =>
-      className ? `inline-text-field ${className}` : 'inline-text-field',
+      classNames('inline-text-field', className),
     )}
   >
     <Label className="eyebrow inline-text-field-label">{label}</Label>

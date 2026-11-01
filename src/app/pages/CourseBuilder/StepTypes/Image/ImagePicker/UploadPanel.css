@@ -1,0 +1,55 @@
+.image-drop-zone {
+  position: relative;
+  display: grid;
+  gap: var(--space-2);
+  place-content: center;
+  place-items: center;
+  padding: var(--space-8) var(--space-4);
+  text-align: center;
+  background: var(--color-cream);
+  border: var(--border-width-xl) dashed var(--color-accent);
+  border-radius: var(--radius-xl);
+  outline: none;
+  transition:
+    var(--hover-transition),
+    border-color var(--motion-duration-quick) ease,
+    scale var(--motion-duration-snap) var(--motion-easing-bounce),
+    var(--focus-transition);
+
+  &[data-drop-target] {
+    background: color-mix(in sRGB, var(--color-accent) 25%, var(--color-cream));
+    border-color: var(--color-accent-strong);
+    scale: 1.02;
+  }
+
+  &[data-focus-visible] {
+    box-shadow: var(--focus-ring);
+  }
+}
+
+.image-drop-zone-icon {
+  width: var(--space-12);
+  height: var(--space-12);
+  color: var(--color-accent-strong);
+}
+
+.image-drop-zone-text {
+  font-weight: var(--font-weight-semibold);
+}
+
+.image-picker-hint {
+  font-size: var(--font-size-sm);
+  line-height: var(--leading-sm);
+}
+
+@media (pointer: coarse) {
+  .image-drop-zone-text {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .image-drop-zone {
+    transition: none;
+  }
+}

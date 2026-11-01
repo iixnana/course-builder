@@ -8,15 +8,16 @@ import {
   type ReactNode,
 } from 'react'
 import { animatePresence } from '../../../../utils/presence'
-import { DragHandle } from './DragHandle'
+import { DragHandle, type MoveDirection } from './DragHandle'
 
 interface SortableStepProps {
   id: string
   isDragDisabled: boolean
   isPlaceholder: boolean
-  isSettling: boolean
   hasMotion: boolean
   isListMounted: () => boolean
+  onNode: (id: string, node: HTMLLIElement | null) => void
+  onMove: (id: string, direction: MoveDirection) => void
   children: (dragHandle: ReactNode) => ReactNode
 }
 
@@ -24,9 +25,10 @@ export const SortableStep = ({
   id,
   isDragDisabled,
   isPlaceholder,
-  isSettling,
   hasMotion,
   isListMounted,
+  onNode,
+  onMove,
   children,
 }: SortableStepProps) => {
   const nodeRef = useRef<HTMLLIElement | null>(null)
@@ -44,8 +46,9 @@ export const SortableStep = ({
     (element: HTMLLIElement | null) => {
       nodeRef.current = element
       setNodeRef(element)
+      onNode(id, element)
     },
-    [setNodeRef],
+    [id, setNodeRef, onNode],
   )
 
   const [shouldEnter] = useState(hasMotion)
@@ -67,7 +70,6 @@ export const SortableStep = ({
       className="card step-card"
       data-step-id={id}
       data-placeholder={isPlaceholder || undefined}
-      data-settling-target={isSettling ? id : undefined}
       style={{
         transform: CSS.Translate.toString(transform),
         transition: hasMotion ? transition : undefined,
@@ -78,7 +80,9 @@ export const SortableStep = ({
           ref={setActivatorNodeRef}
           {...attributes}
           {...listeners}
+          aria-pressed={undefined}
           disabled={isDragDisabled}
+          onMove={(direction) => onMove(id, direction)}
         />,
       )}
     </li>

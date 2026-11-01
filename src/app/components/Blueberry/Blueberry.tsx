@@ -1,3 +1,4 @@
+import { classNames } from '../../../utils/classNames'
 import './Blueberry.css'
 
 interface BlueberryProps {
@@ -6,10 +7,7 @@ interface BlueberryProps {
 }
 
 export const Blueberry = ({ mood = 'plain', className }: BlueberryProps) => (
-  <div
-    className={className ? `blueberry ${className}` : 'blueberry'}
-    aria-hidden="true"
-  >
+  <div className={classNames('blueberry', className)} aria-hidden="true">
     {mood === 'sad' && (
       <>
         <span className="blueberry-eye blueberry-eye-left" />

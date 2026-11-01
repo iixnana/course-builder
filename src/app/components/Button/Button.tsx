@@ -4,6 +4,7 @@ import {
   type ButtonProps as AriaButtonProps,
 } from 'react-aria-components'
 import { useBubbleBurst } from '../../../hooks/useBubbleBurst'
+import { classNames } from '../../../utils/classNames'
 import { BubbleBurst } from '../BubbleBurst/BubbleBurst'
 import './Button.css'
 
@@ -25,7 +26,7 @@ export const Button = ({
       {...props}
       data-variant={variant}
       className={composeRenderProps(className, (className) =>
-        className ? `button ${className}` : 'button',
+        classNames('button', className),
       )}
       onPress={(event) => {
         triggerBurst()

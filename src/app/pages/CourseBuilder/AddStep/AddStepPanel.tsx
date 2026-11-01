@@ -1,43 +1,23 @@
-import { DialogTrigger } from 'react-aria-components'
+import type { Ref } from 'react'
 import { HideAway } from '../../../components/HideAway/HideAway'
-import { IconButton } from '../../../components/IconButton/IconButton'
-import { StepTypeIcon } from '../../../components/StepTypeIcon/StepTypeIcon'
-import {
-  createImageStep,
-  createStep,
-  stepTypeLabel,
-  stepTypes,
-  type Step,
-  type StepType,
-} from '../../../../model/course'
-import { ImagePickerDialog } from '../ImagePicker/ImagePickerDialog'
+import { stepTypes, type Step } from '../../../../model/step'
+import { stepTypeViews } from '../StepTypes/stepTypeViews'
 import './AddStepPanel.css'
 
 interface AddStepPanelProps {
+  ref?: Ref<HTMLDivElement>
   isEmpty: boolean
   onAddStep: (step: Step) => void
 }
 
-interface AddStepButtonProps {
-  type: StepType
-  onPress?: () => void
-}
-
-const AddStepButton = ({ type, onPress }: AddStepButtonProps) => (
-  <IconButton
-    label={`Add ${stepTypeLabel[type]}`}
-    variant="primary"
-    className="add-step-button"
-    onPress={onPress}
-  >
-    <StepTypeIcon type={type} />
-  </IconButton>
-)
-
-export const AddStepPanel = ({ isEmpty, onAddStep }: AddStepPanelProps) => (
+export const AddStepPanel = ({
+  ref,
+  isEmpty,
+  onAddStep,
+}: AddStepPanelProps) => (
   <div
+    ref={ref}
     className="add-step-panel"
-    data-scroll-anchor="add-step"
     role="group"
     aria-label="Add a step"
   >
@@ -45,23 +25,10 @@ export const AddStepPanel = ({ isEmpty, onAddStep }: AddStepPanelProps) => (
       <p className="add-step-message">Add your first step</p>
     </HideAway>
     <div className="add-step-buttons">
-      {stepTypes.map((type) =>
-        type === 'image' ? (
-          <DialogTrigger key={type}>
-            <AddStepButton type={type} />
-            <ImagePickerDialog
-              title="Add an image"
-              onPick={(image) => onAddStep(createImageStep(image))}
-            />
-          </DialogTrigger>
-        ) : (
-          <AddStepButton
-            key={type}
-            type={type}
-            onPress={() => onAddStep(createStep(type))}
-          />
-        ),
-      )}
+      {stepTypes.map((type) => {
+        const { AddButton } = stepTypeViews[type]
+        return <AddButton key={type} onAddStep={onAddStep} />
+      })}
     </div>
   </div>
 )
